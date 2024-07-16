@@ -9,3 +9,8 @@ ScriptApp.onInit.Add(function() {
 	ScriptApp.cameraEffectParam1 = 650; // Sets the range of the vignette effect to 500
     ScriptApp.displayRatio = 1.5;
 });
+
+ScriptApp.onJoinPlayer.Add(function(player){
+	player.hidden = true;
+	player.sendUpdated();
+})
