@@ -13,7 +13,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@types/node": "^18.0.1",
     "eslint": "^8.10.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.5"
   },
   "packageManager": "pnpm@9.0.6+sha512.f6d863130973207cb7a336d6b439a242a26ac8068077df530d6a86069419853dc1ffe64029ec594a9c505a3a410d19643c870aba6776330f5cfddcf10a9c1617",
   "dependencies": {
