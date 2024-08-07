@@ -1,12 +1,7 @@
 import "zep-script";
-import { ObjectEffectType, TileEffectType } from "zep-script";
+import { ObjectEffectType, ScriptPlayer, TileEffectType } from "zep-script";
 
 let stick = ScriptApp.loadSpritesheet("stick.png");
-
-let isOpenedLabA: boolean = false;
-let isOpenedStairs: boolean = false;
-let hasCompanion: boolean = false;
-let hasItems: boolean[] = Array(2).fill(false);
 
 interface Region {
   name: string;
@@ -34,7 +29,7 @@ interface Area {
 }
 
 const areas: Area[] = [
-  { name: '개발실 A 문 앞', type: 1, topLeftX: 88, topLeftY: 83, bottomRightX: 89, bottomRightY: 84 },
+  { name: '개발실 A 문 앞', type: 1, topLeftX: 87, topLeftY: 83, bottomRightX: 90, bottomRightY: 84 },
   { name: '개발실 A 컴퓨터 1', type: 2, topLeftX: 74, topLeftY: 79, bottomRightX: 74, bottomRightY: 79 },
   { name: '개발실 A 컴퓨터 2', type: 3, topLeftX: 76, topLeftY: 78, bottomRightX: 76, bottomRightY: 78 },
   { name: '개발실 A 기계 1', type: 4, topLeftX: 86, topLeftY: 82, bottomRightX: 87, bottomRightY: 82 },
@@ -47,7 +42,7 @@ const areas: Area[] = [
   { name: '실험소모품창고 캐비닛 2', type: 11, topLeftX: 83, topLeftY: 174, bottomRightX: 85, bottomRightY: 174 },
   { name: '실험소모품창고 캐비닛 3', type: 12, topLeftX: 85, topLeftY: 175, bottomRightX: 87, bottomRightY: 176 },
   { name: '실험소모품창고 상자', type: 13, topLeftX: 83, topLeftY: 175, bottomRightX: 84, bottomRightY: 176 },
-  { name: '비상계단', type: 14, topLeftX: 40, topLeftY: 36, bottomRightX: 41, bottomRightY: 37 },
+  { name: '비상계단', type: 14, topLeftX: 39, topLeftY: 35, bottomRightX: 45, bottomRightY: 39 },
 ];
 
 function getRegionName(x: number, y: number): string | null {
@@ -68,38 +63,6 @@ function getAreaNumber(x: number, y: number): number {
   return -1;
 }
 
-function setTileEffect(n: number) {
-  const th = areas.findIndex(area => area.type === n);
-  const area = areas[th];
-
-  if(th === 0) { // 개발실 A 문 앞
-    for (let x = area.topLeftX; x <= area.bottomRightX; x++) {
-      for (let y = area.topLeftY; y <= area.bottomRightY; y++) {
-        ScriptMap.putTileEffect(x, y, TileEffectType.PORTAL, {
-          type: 1,
-          locationName: '개발실A 앞',
-          triggerByTouch: false,
-          insivible: true,
-        });
-      }
-    }
-  } else if(th === 13) { // 비상계단
-    for (let x = area.topLeftX; x <= area.bottomRightX; x++) {
-      for (let y = area.topLeftY; y <= area.bottomRightY; y++) {
-        
-        ScriptMap.putTileEffect(x, y, TileEffectType.PORTAL, {
-          type: 0,
-          locationName: '계단 앞',
-          targetMapID: "yO3pXN",
-          triggerByTouch: false,
-          insivible: true,
-        });
-      }
-    }
-  }
-
-}
-
 // ZEP functions
 ScriptApp.onInit.Add(function() {
   ScriptApp.cameraEffect = 1;
@@ -108,6 +71,8 @@ ScriptApp.onInit.Add(function() {
 
   //@ts-ignore
   ScriptApp.enableFreeView = false;
+
+  ScriptMap.putObjectWithKey(82, 77, stick, { key: "stick" });
 });
 
 ScriptApp.onJoinPlayer.Add(function(player) {
@@ -116,18 +81,20 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   player.sendUpdated();
   
   player.showCenterLabel(getRegionName(player.tileX, player.tileY));
-  
-  ScriptApp.playSound('呪いのオルゴール.mp3', true, true);
 
-  ScriptMap.putObjectWithKey(82, 77, stick, { key: "stick" });
-});
-
-ScriptApp.onUpdate.Add(function(dt) {
+  player.tag = {
+    isOpenedLabA: false,
+    isOpenedStairs: false,
+    hasCompanion: false,
+    hasStick: false,
+    hasCard: false,
+    hasLeg: false,
+  }
 });
 
 ScriptApp.addOnKeyDown(70, function(player) {
   const layer = ScriptMap.getTile(2, player.tileX, player.tileY);
-
+  
   if(layer === 8) {
     player.showCenterLabel(getRegionName(player.tileX, player.tileY));
   } else if(layer === -1) {
@@ -135,10 +102,12 @@ ScriptApp.addOnKeyDown(70, function(player) {
     
     switch (area) {
       case 1:
-        if(isOpenedLabA) return;
-        if(hasItems[0]) {
-          setTileEffect(1);
-          isOpenedLabA = true;
+        if(player.tag.isOpenedLabA) {
+          ScriptApp.spawnPlayer(player.id, 36, 21);
+          return;
+        }
+        if(player.tag.hasStick) {
+          player.tag.isOpenedLabA = true;
           player.showNoteModal("'긴 막대'로 소리나지 않게 조심해서 잠금장치를 떼어냈다! 경비로봇을 피해서 캐롤린을 찾아야겠다.");
         } else {
           player.showNoteModal("문이 잠긴 채로 잠금장치가 고장나 있다. 경비로봇이 쫓아 들어오지 못하도록 내가 망가뜨린 모양이다. 덕분에 나도 이곳에 갇혔다. 나가서 캐롤린을 찾아야 하는데.");
@@ -150,7 +119,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
         break;
 
       case 4:
-        if(hasCompanion) {
+        if(player.tag.hasCompanion) {
           player.showNoteModal("캐롤린은 기계 패널에 흘러가는 문자 중 나의 관리번호를 발견하고는 패널을 만지작거렸다. 패널에는 TES-0426이라고 쓰여 있다.");
         } else {
           player.showNoteModal("우리들을 관리하는 장치 중 하나다.");
@@ -158,7 +127,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
         break;
         
       case 5:
-        if(hasCompanion) {
+        if(player.tag.hasCompanion) {
           player.showNoteModal("캐롤린은 참담한 표정으로 고개를 돌렸다.");
         } else {
           player.showNoteModal("우리들의 실험 결과를 관리하는 기계다. 앤과 메리의 실험 결과가 적혀 있다… 읽고 싶지 않다.");
@@ -166,19 +135,18 @@ ScriptApp.addOnKeyDown(70, function(player) {
         break;
 
       case 6:
-        if(!hasItems[0]) {
+        if(!player.tag.hasStick) {
           player.showNoteModal("기계 장치의 부속품 손잡이를 떼어내서 문을 부술 수 있을 것 같다.");
           player.showNoteModal("아이템 '긴 막대'를 얻었다.");
           player.showNoteModal("인벤토리에 '긴 막대'를 넣었다.");
-  
-          ScriptMap.putObjectWithKey(82, 77, null, { key: "stick" });
-          // ScriptMap.clearAllObjects();
-          hasItems[0] = true;
+          
+          player.disappearObject("stick");
+          player.tag.hasStick = true;
         }
         break;
 
       case 7:
-        if(hasCompanion) {
+        if(player.tag.hasCompanion) {
           player.showNoteModal("캐롤린은 얼굴을 찌푸렸다. 초조한 것 같다.");
         } else {
           player.showNoteModal("다음 실험에 대한 계획서인 것 같다. 자세히 읽을 시간은 없다.");
@@ -186,11 +154,11 @@ ScriptApp.addOnKeyDown(70, function(player) {
         break;
 
       case 8:
-        if(!hasItems[1]) {
+        if(!player.tag.hasCard) {
           player.showNoteModal("캐비닛에서 보안카드를 찾았다.");
           player.showNoteModal("아이템 '지하 2층 보안카드'를 얻었다.");
           player.showNoteModal("인벤토리에 '지하 2층 보안카드'를 넣었다.");
-          hasItems[1] = true;  
+          player.tag.hasCard = true;  
         }
         break;
 
@@ -211,19 +179,21 @@ ScriptApp.addOnKeyDown(70, function(player) {
         break;
             
       case 13:
-        if(!hasItems[2]) {
+        if(!player.tag.hasLeg) {
           player.showNoteModal("약간 낡고 더럽지만 쓸만한 다리 한 쌍을 찾았다. 캐롤린의 원래 다리와는 조금 다르지만 어쩔 수 없지.");
           player.showNoteModal("아이템 '다리 한 쌍'을 얻었다.");
           player.showNoteModal("인벤토리에 '다리 한 쌍'을 넣었다.");
-          hasItems[2] = true;  
+          player.tag.hasLeg = true;  
         }
         break;
 
       case 14:
-        if(isOpenedStairs) return;
-        if(hasItems[1]) {
-          setTileEffect(14);
-          isOpenedStairs = true;
+        if(player.tag.isOpenedStairs) {
+          ScriptApp.spawnPlayer(player.id, 150, 10);
+          return;
+        }
+          if(player.tag.hasCard) {
+          player.tag.isOpenedStairs = true;
           player.showNoteModal("'지하 2층 보안카드'로 문을 열었다.");
         } else {
           player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
