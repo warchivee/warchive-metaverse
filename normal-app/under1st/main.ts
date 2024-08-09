@@ -5,6 +5,13 @@
 import "zep-script";
 import { ObjectEffectType } from "zep-script";
 
+let chell = ScriptApp.loadSpritesheet('chell.png', 48, 64, {
+  left: [5, 6, 7, 8],
+  up: [13, 14, 15, 16, 17],
+  down: [0, 1, 2, 3, 4],
+  right: [9, 10, 11, 12]
+});
+
 interface Region {
   name: string;
   topLeftX: number;
@@ -14,11 +21,11 @@ interface Region {
 }
 
 const regions: Region[] = [
-  { name: "서류보관실", topLeftX: 15, topLeftY: 17, bottomRightX: 60, bottomRightY: 41 },
-  { name: "폐기물보관실", topLeftX: 73, topLeftY: 75, bottomRightX: 91, bottomRightY: 86 },
-  { name: "부품창고", topLeftX: 68, topLeftY: 103, bottomRightX: 88, bottomRightY: 1 },
-  { name: "휴게실", topLeftX: 65, topLeftY: 130, bottomRightX: 86, bottomRightY: 141 },
-  { name: "폐기처리실", topLeftX: 77, topLeftY: 171, bottomRightX: 88, bottomRightY: 178 },
+  { name: "서류보관실", topLeftX: 98, topLeftY: 78, bottomRightX: 118, bottomRightY: 88 },
+  { name: "폐기물보관실", topLeftX: 95, topLeftY: 104, bottomRightX: 112, bottomRightY: 115 },
+  { name: "부품창고", topLeftX: 95, topLeftY: 139, bottomRightX: 109, bottomRightY: 145 },
+  { name: "휴게실", topLeftX: 13, topLeftY: 163, bottomRightX: 33, bottomRightY: 174 },
+  { name: "폐기처리실", topLeftX: 79, topLeftY: 194, bottomRightX: 97, bottomRightY: 201 },
 ];
 
 interface Area {
@@ -33,8 +40,9 @@ interface Area {
 const areas: Area[] = [
   { name: "서류 앞", type: 1, topLeftX: 99, topLeftY: 80, bottomRightX: 99, bottomRightY: 80 },
   { name: "상자 앞", type: 2, topLeftX: 100, topLeftY: 106, bottomRightX: 102, bottomRightY: 107 },
-  { name: "마네킹 앞", type: 3, topLeftX: 105, topLeftY: 109, bottomRightX: 107, bottomRightY: 110 },
-  { name: "보안카드 앞", type: 4, topLeftX: 21, topLeftY: 165, bottomRightX: 22, bottomRightY: 168 },
+  { name: "보안카드 앞", type: 3, topLeftX: 21, topLeftY: 165, bottomRightX: 22, bottomRightY: 168 },
+  { name: "마네킹 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
+  { name: "계단 앞", type: 5, topLeftX: 121, topLeftY: 44, bottomRightX: 129, bottomRightY: 49 },
 ];
 
 function getRegionName(x: number, y: number): string | null {
@@ -76,6 +84,54 @@ function initTag(player) {
   };
 }
 
+function changeArm(player) {
+  if(!player.tag.hasOldArm) {
+    //@ts-ignore
+    player.showAlert("",function () {
+      //@ts-ignore
+      player.showAlert("", function () {
+        //@ts-ignore
+        player.showAlert("", function() {}, {
+          content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
+        })
+      }, {
+        content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
+        confirmText: "다음으로"
+      });
+    },
+    {
+      content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
+      confirmText: "다음으로"
+    });
+    player.tag.hasOldArm = true;
+    player.sendUpdated();
+  }
+}
+
+function changeBody(player) {
+  if(!player.tag.hasOldBody) {
+     //@ts-ignore
+     player.showAlert("",function () {
+      //@ts-ignore
+      player.showAlert("", function () {
+        //@ts-ignore
+        player.showAlert("", function() {}, {
+          content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
+        })
+      }, {
+        content: "인벤토리에 아이템 ‘캐롤린의 원본 몸통’을 넣었다.",
+        confirmText: "다음으로"
+      });
+    },
+    {
+      content: "캐롤린은 숨을 쉬기 어려워 보인다. 빠르게 몸을 교체해주었다.",
+      confirmText: "다음으로"
+    });
+    player.tag.hasOldBody = true;
+    player.sendUpdated();
+  }
+}
+
 // App 실행 시에 최초로 호출되는 이벤트 (유저 진입 전)
 // Normal App과 Sidebar App은 Script 적용 후 맵이 실행될 때 호출 [ Enter ]
 ScriptApp.onInit.Add(function () {
@@ -91,6 +147,7 @@ ScriptApp.onInit.Add(function () {
 // 이후 플레이어가 입장 할 때마다 호출 [ Events ]
 ScriptApp.onJoinPlayer.Add(function (player) {
   player.hidden = true;
+  player.sprite = chell;
   player.name = "첼";
 
   initTag(player);
@@ -139,6 +196,7 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
 // F키 눌렸을 때
 ScriptApp.addOnKeyDown(70, function (player) {
   const layer = ScriptMap.getTile(2, player.tileX, player.tileY);
+
   if (layer === 8) {
     player.showCenterLabel(getRegionName(player.tileX, player.tileY));
   } else if (layer === -1) {
@@ -160,67 +218,86 @@ ScriptApp.addOnKeyDown(70, function (player) {
         );
         break;
 
-        case 2:
-          if(!player.tag.hasNewArm) {
+      case 2:
+        if(!player.tag.hasNewArm) {
+          //@ts-ignore
+          player.showAlert("",function () {
             //@ts-ignore
-            player.showAlert("",function () {
+            player.showAlert("", function () {
               //@ts-ignore
-              player.showAlert("", function () {
-                //@ts-ignore
-                player.showAlert("", function() {
-                }, {
-                  content: "인벤토리에 '팔 한 쌍'을 넣었다."
-                })
+               player.showAlert("", function() {
+                //한쌍 넣은 후
+                player.tag.hasNewArm = true;
+                if(player.tag.hasNewArm) {
+                  changeArm(player);
+                }
               }, {
-                content: "아이템 '팔 한 쌍'을 얻었다.",
-                confirmText: "다음으로"
-              });
-            },
-            {
-              content: "커다란 상자에 들어있던 것은 쓰레기처럼 아무렇게나 처박혀 있던 앤과 메리였다. 폐기 대기중이었던 것 같다.",
-              confirmText: "다음으로"
-            });
-            player.tag.hasNewArm = true;
-          }
-          break;
-
-        case 3:
-          if(!player.tag.hasOldArm) {
-            //@ts-ignore
-            player.showAlert("",function () {
-              //@ts-ignore
-              player.showAlert("", function () {
-                //@ts-ignore
-                player.showAlert("", function() {}, {
-                  content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
-                })
-              }, {
-                content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
-                confirmText: "다음으로"
-              });
-            },
-            {
-              content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
-              confirmText: "다음으로"
-            });
-            player.tag.hasOldArm = true;
-          }
-        break;
-
-        case 4:
-          if(!player.tag.hasCard) {
-            //@ts-ignore
-            player.showAlert("", function() {
-              //@ts-ignore
-              player.showAlert("", function() {}, {
-                content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다."
+                content: "인벤토리에 '팔 한 쌍'을 넣었다."
               })
             }, {
-              content: "아이템 ‘지하 1층 보안카드’를 얻었다.",
+              content: "아이템 '팔 한 쌍'을 얻었다.",
               confirmText: "다음으로"
             });
-            player.tag.hasCard = true;
+          },
+          {
+            content: "커다란 상자에 들어있던 것은 쓰레기처럼 아무렇게나 처박혀 있던 앤과 메리였다. 폐기 대기중이었던 것 같다.",
+            confirmText: "다음으로"
+          });
+        }
+        break;
+
+      case 3:
+        if(!player.tag.hasCard) {
+          //@ts-ignore
+          player.showAlert("", function() {
+            //@ts-ignore
+            player.showAlert("", function() {}, {
+              content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다."
+            })
+          }, {
+            content: "아이템 ‘지하 1층 보안카드’를 얻었다.",
+            confirmText: "다음으로"
+          });
+          player.tag.hasCard = true;
+        }
+        break;
+      
+      case 4:
+        if(!player.tag.hasNewBody) {
+          //@ts-ignore
+          player.showAlert("", function() {
+            //@ts-ignore
+            player.showAlert("", function() {
+              player.tag.hasNewBody = true;
+              player.sendUpdated();
+              if(player.tag.hasNewBody) {
+                changeBody(player);
+              }
+            }, {
+              content: "인벤토리에 ‘누군가의 몸뚱이’를 넣었다."
+            })
+          }, {
+            content: "아이템 ‘누군가의 몸뚱이’를 얻었다.",
+            confirmText: "다음으로"
+          });
+        }
+        break;
+
+      case 5:
+        if(player.tag.isOpenedStairs) {
+          player.spawnAtMap("Arvq0o", "8j4AjQ");
+        }
+
+        if(player.tag.hasCard) {
+          if(!player.tag.isOpenedStairs) {
+            player.tag.isOpenedStairs = true;
+            player.sendUpdated();
+            player.showNoteModal("‘지하 1층 보안카드’로 문을 열었다.");
           }
+        } else {
+          player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
+        }
+        break;
     }
   }
 });
