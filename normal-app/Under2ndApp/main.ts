@@ -108,7 +108,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
         }
         if(player.tag.hasStick) {
           player.tag.isOpenedLabA = true;
-          player.showNoteModal("'긴 막대'로 소리나지 않게 조심해서 잠금장치를 떼어냈다! 경비로봇을 피해서 캐롤린을 찾아야겠다.");
+          player.showNoteModal("‘긴 막대’로 소리나지 않게 조심해서 잠금장치를 떼어냈다! 경비로봇을 피해서 캐롤린을 찾아야겠다.");
         } else {
           player.showNoteModal("문이 잠긴 채로 잠금장치가 고장나 있다. 경비로봇이 쫓아 들어오지 못하도록 내가 망가뜨린 모양이다. 덕분에 나도 이곳에 갇혔다. 나가서 캐롤린을 찾아야 하는데.");
         }
@@ -136,9 +136,20 @@ ScriptApp.addOnKeyDown(70, function(player) {
 
       case 6:
         if(!player.tag.hasStick) {
-          player.showNoteModal("기계 장치의 부속품 손잡이를 떼어내서 문을 부술 수 있을 것 같다.");
-          player.showNoteModal("아이템 '긴 막대'를 얻었다.");
-          player.showNoteModal("인벤토리에 '긴 막대'를 넣었다.");
+          //@ts-ignore
+          player.showAlert("", function () {
+            //@ts-ignore
+            player.showAlert("", function () {
+              //@ts-ignore
+              player.showAlert("", function () { }, {
+                content: "인벤토리에 ‘긴 막대’를 넣었다.",
+              });
+            }, {
+              content: "아이템 ‘긴 막대’를 얻었다.",
+            });
+          }, {
+            content: "기계 장치의 부속품 손잡이를 떼어내서 문을 부술 수 있을 것 같다.",
+          });
           
           player.disappearObject("stick");
           player.tag.hasStick = true;
@@ -155,9 +166,21 @@ ScriptApp.addOnKeyDown(70, function(player) {
 
       case 8:
         if(!player.tag.hasCard) {
-          player.showNoteModal("캐비닛에서 보안카드를 찾았다.");
-          player.showNoteModal("아이템 '지하 2층 보안카드'를 얻었다.");
-          player.showNoteModal("인벤토리에 '지하 2층 보안카드'를 넣었다.");
+          //@ts-ignore
+          player.showAlert("", function () {
+            //@ts-ignore
+            player.showAlert("", function () {
+              //@ts-ignore
+              player.showAlert("", function () { }, {
+                content: "인벤토리에 ‘지하 2층 보안카드’를 넣었다.",
+              });
+            }, {
+              content: "아이템 ‘지하 2층 보안카드’를 얻었다.",
+            });
+          }, {
+            content: "캐비닛에서 보안카드를 찾았다.",
+          });
+
           player.tag.hasCard = true;  
         }
         break;
@@ -180,9 +203,21 @@ ScriptApp.addOnKeyDown(70, function(player) {
             
       case 13:
         if(!player.tag.hasLeg) {
-          player.showNoteModal("약간 낡고 더럽지만 쓸만한 다리 한 쌍을 찾았다. 캐롤린의 원래 다리와는 조금 다르지만 어쩔 수 없지.");
-          player.showNoteModal("아이템 '다리 한 쌍'을 얻었다.");
-          player.showNoteModal("인벤토리에 '다리 한 쌍'을 넣었다.");
+          //@ts-ignore
+          player.showAlert("", function () {
+            //@ts-ignore
+            player.showAlert("", function () {
+              //@ts-ignore
+              player.showAlert("", function () { }, {
+                content: "인벤토리에 ‘다리 한 쌍’을 넣었다.",
+              });
+            }, {
+              content: "아이템 ‘다리 한 쌍’을 얻었다.",
+            });
+          }, {
+            content: "약간 낡고 더럽지만 쓸만한 다리 한 쌍을 찾았다. 캐롤린의 원래 다리와는 조금 다르지만 어쩔 수 없지.",
+          });
+          
           player.tag.hasLeg = true;  
         }
         break;
@@ -194,7 +229,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
         }
           if(player.tag.hasCard) {
           player.tag.isOpenedStairs = true;
-          player.showNoteModal("'지하 2층 보안카드'로 문을 열었다.");
+          player.showNoteModal("‘지하 2층 보안카드’로 문을 열었다.");
         } else {
           player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
         }
