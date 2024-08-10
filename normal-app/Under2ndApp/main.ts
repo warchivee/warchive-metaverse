@@ -2,6 +2,7 @@ import "zep-script";
 import { ObjectEffectType, ScriptPlayer, TileEffectType } from "zep-script";
 
 let stick = ScriptApp.loadSpritesheet("stick.png");
+let caroline = ScriptApp.loadSpritesheet("caroline1.png");
 
 interface Region {
   name: string;
@@ -73,6 +74,11 @@ ScriptApp.onInit.Add(function() {
   ScriptApp.enableFreeView = false;
 
   ScriptMap.putObjectWithKey(82, 77, stick, { key: "stick" });
+  ScriptMap.putObjectWithKey(73, 134, caroline, { 
+    type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
+    impassable: true,
+    key: "caroline",
+  });
 });
 
 ScriptApp.onJoinPlayer.Add(function(player) {
@@ -90,6 +96,12 @@ ScriptApp.onJoinPlayer.Add(function(player) {
     hasCard: false,
     hasLeg: false,
   }
+});
+
+ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
+	if(key){
+	    player.disappearObject(key);
+	}
 });
 
 ScriptApp.addOnKeyDown(70, function(player) {
