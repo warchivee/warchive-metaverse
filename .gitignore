@@ -1,3 +1,5 @@
 dist
 node_modules
 *.zip
+normal-app/.DS_Store
+.DS_Store
