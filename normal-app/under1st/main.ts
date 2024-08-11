@@ -11,6 +11,7 @@ let chell = ScriptApp.loadSpritesheet('chell.png', 48, 64, {
   down: [0, 1, 2, 3, 4],
   right: [9, 10, 11, 12]
 });
+let caroline = ScriptApp.loadSpritesheet('caroline.png');
 
 interface Region {
   name: string;
@@ -110,7 +111,6 @@ function getNewArm(player) {
      player.showAlert("", function() {
       //한쌍 넣은 후
       player.tag.hasNewArm = true;
-      changeOldArm(player);
     }, {
       content: "인벤토리에 '팔 한 쌍'을 넣었다."
     })
@@ -120,31 +120,6 @@ function getNewArm(player) {
   });
 }
 
-function changeOldArm(player) {
-  if(!player.tag.hasOldArm) {
-    //@ts-ignore
-    player.showAlert("",function () {
-        //@ts-ignore
-      player.showAlert("", function () {
-        //@ts-ignore
-        player.showAlert("", function() {
-        }, {
-          content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
-        })
-      }, {
-        content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
-        confirmText: "다음으로"
-      });
-    },
-    {
-      content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
-      confirmText: "다음으로"
-    });
-    player.tag.hasOldArm = true;
-    player.sendUpdated();
-  }
-}
-
 function changeBody(player) {
   if(!player.tag.hasOldBody) {
      //@ts-ignore
@@ -152,13 +127,25 @@ function changeBody(player) {
       //@ts-ignore
       player.showAlert("", function () {
         //@ts-ignore
-        player.showAlert("", function() {
-          showNarration(player, "6");
+        player.showAlert("", function () {
+          //@ts-ignore
+          player.showAlert("", function () {
+            //@ts-ignore
+            player.showAlert("", function() {
+              showNarration(player, "6");
+            }, {
+              content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
+            })
+          }, {
+            content: "인벤토리에 아이템 ‘캐롤린의 원본 몸통’을 넣었다.",
+            confirmText: "다음으로"
+          });
         }, {
-          content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
+          content: "캐롤린은 정신을 잃었다.",
+          confirmText: "다음으로"
         })
       }, {
-        content: "인벤토리에 아이템 ‘캐롤린의 원본 몸통’을 넣었다.",
+        content: "캐롤린: …….",
         confirmText: "다음으로"
       });
     },
@@ -175,11 +162,17 @@ function changeBody(player) {
 // Normal App과 Sidebar App은 Script 적용 후 맵이 실행될 때 호출 [ Enter ]
 ScriptApp.onInit.Add(function () {
   //@ts-ignore
-  ScriptApp.enableFreeView = false;
+  ScriptApp.enableFreeView = false; //스크립트 줌인 방지
   ScriptApp.cameraEffect = 1; // 1 = 비네팅 효과
   ScriptApp.cameraEffectParam1 = 650; // 비네팅 효과의 범위
   ScriptApp.displayRatio = 1.5; //화면의 줌을 컨트롤 하는 값
   ScriptApp.sendUpdated(); // 앱의 Field값이 변경되면 App.sendUpdated()로 변경값을 적용
+
+  //@ts-ignore
+  ScriptMap.putObjectWithKey(97, 105, caroline, {type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
+    impassable: true,
+    key: "caroline",
+  })
 });
 
 // 해당하는 모든 플레이어가 이 이벤트를 통해 App에 입장
@@ -222,6 +215,47 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
   }
 });
 
+ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
+  if(key==="caroline") {
+    if(player.tag.hasNewArm) {
+      if(!player.tag.hasOldArm) {
+        //@ts-ignore
+        player.showAlert("",function () {
+          //@ts-ignore
+          // player.showAlert("", function () {
+           
+          // }, {
+          //   content: "캐롤린: 미안해…",
+          //   confirmText: "다음으로"
+          // });
+          ScriptMap.sayObjectWithKey(key, "미안해…");
+           //@ts-ignore
+           player.showAlert("", function () {
+            //@ts-ignore
+            player.showAlert("", function() {
+              player.disappearObject(key);
+            }, {
+              content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
+            })
+          }, {
+            content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
+            confirmText: "다음으로"
+          });
+        },
+        {
+          content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
+          confirmText: "다음으로"
+        });
+        player.tag.hasOldArm = true;
+        player.sendUpdated();
+      } 
+    } else {
+      player.showNoteModal("캐롤린의 새로운 팔을 먼저 찾으세요.");
+    }
+
+  }
+});
+
 // F키 눌렸을 때
 ScriptApp.addOnKeyDown(70, function (player) {
   const layer = ScriptMap.getTile(2, player.tileX, player.tileY);
@@ -236,8 +270,14 @@ ScriptApp.addOnKeyDown(70, function (player) {
         //@ts-ignore
         player.showAlert("",function () {
             //@ts-ignore
-            player.showAlert("", function () {}, {
+            player.showAlert("", function () {
+              //@ts-ignore
+              player.showAlert("", function () {}, {
+                content: "캐롤린: 당직 연구원 앤…. …그렇구나. 앤의 실험이 결국 끝난 거야. 앤은 그 아이들을 폐기하려 남아있는 거야. …그 아이들에게는 폐기되는 편이 더 행복할까? 아니면 자신의 몸이 누구의 것인지 영원히 다투며 살아가는 게 행복할까?",
+              })
+            }, {
               content: "캐롤린의 안색이 창백해졌다.",
+              confirmText: "다음으로"
             });
           },
           {
@@ -255,7 +295,6 @@ ScriptApp.addOnKeyDown(70, function (player) {
           },
           {
             content: "커다란 상자에 들어있던 것은 쓰레기처럼 아무렇게나 처박혀 있던 앤과 메리였다. 폐기 대기중이었던 것 같다.",
-            confirmText: "다음으로"
           });
         }
         break;
@@ -266,7 +305,7 @@ ScriptApp.addOnKeyDown(70, function (player) {
           player.showAlert("", function() {
             //@ts-ignore
             player.showAlert("", function() {}, {
-              content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다."
+              content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다.",
             })
           }, {
             content: "아이템 ‘지하 1층 보안카드’를 얻었다.",
@@ -279,19 +318,25 @@ ScriptApp.addOnKeyDown(70, function (player) {
       case 4:
         if(!player.tag.hasNewBody) {
           //@ts-ignore
-          player.showAlert("", function() {
+          player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
-              player.tag.hasNewBody = true;
-              player.sendUpdated();
-              if(player.tag.hasNewBody) {
-                changeBody(player);
-              }
+              //@ts-ignore
+              player.showAlert("", function() {
+                player.tag.hasNewBody = true;
+                player.sendUpdated();
+                if(player.tag.hasNewBody) {
+                  changeBody(player);
+                }
+              }, {
+                content: "인벤토리에 ‘누군가의 몸뚱이’를 넣었다."
+              })
             }, {
-              content: "인벤토리에 ‘누군가의 몸뚱이’를 넣었다."
-            })
+              content: "아이템 ‘누군가의 몸뚱이’를 얻었다.",
+              confirmText: "다음으로"
+            });
           }, {
-            content: "아이템 ‘누군가의 몸뚱이’를 얻었다.",
+            content: "컨베이어 벨트 위에 아무렇게나 놓여진 누군가의 몸뚱이가 보인다. 머리만 누군가 떼어간 듯이 손상되지 않은 멀쩡한 몸이다. 머리만…?",
             confirmText: "다음으로"
           });
         }
@@ -314,7 +359,7 @@ ScriptApp.addOnKeyDown(70, function (player) {
         break;
       
       case 6:
-        if(player.tag.hasNewArm) {
+        if(player.tag.hasNewArm & player.tag.hasOldArm) {
           if(!player.tag.isWasteNarration) {
             showNarration(player, "5");
             player.tag.isWasteNarration = true;
