@@ -43,6 +43,7 @@ const areas: Area[] = [
   { name: "보안카드 앞", type: 3, topLeftX: 21, topLeftY: 165, bottomRightX: 22, bottomRightY: 168 },
   { name: "마네킹 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
   { name: "계단 앞", type: 5, topLeftX: 121, topLeftY: 44, bottomRightX: 129, bottomRightY: 49 },
+  { name: "폐기물보관실 문 앞", type: 6, topLeftX: 110, topLeftY: 112, bottomRightX: 111, bottomRightY: 113 },
 ];
 
 function getRegionName(x: number, y: number): string | null {
@@ -76,22 +77,58 @@ function getAreaNumber(x: number, y: number): number {
 function initTag(player) {
   player.tag = {
     isOpenedStairs: false,
+    isWasteNarration: false,
     hasCard: false,
     hasNewArm: false,
     hasOldArm: false,
     hasNewBody: false,
     hasOldBody: false,
+    widget: null,
   };
 }
 
-function changeArm(player) {
+function showNarration(player, narrationNumber:string) {
+  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+  player.tag.widget.onMessage.Add(function (player, data) {
+      if (data.type == "close") {
+          player.tag.widget.destroy();
+          player.tag.widget = null;
+          if(narrationNumber === "4") {
+            getNewArm(player);
+          }
+      }
+  });
+  player.tag.widget.sendMessage({
+    narration: narrationNumber,
+  });
+}
+
+function getNewArm(player) {
+  //@ts-ignore
+  player.showAlert("", function () {
+    //@ts-ignore
+     player.showAlert("", function() {
+      //한쌍 넣은 후
+      player.tag.hasNewArm = true;
+      changeOldArm(player);
+    }, {
+      content: "인벤토리에 '팔 한 쌍'을 넣었다."
+    })
+  }, {
+    content: "아이템 '팔 한 쌍'을 얻었다.",
+    confirmText: "다음으로"
+  });
+}
+
+function changeOldArm(player) {
   if(!player.tag.hasOldArm) {
     //@ts-ignore
     player.showAlert("",function () {
-      //@ts-ignore
+        //@ts-ignore
       player.showAlert("", function () {
         //@ts-ignore
-        player.showAlert("", function() {}, {
+        player.showAlert("", function() {
+        }, {
           content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
         })
       }, {
@@ -115,7 +152,9 @@ function changeBody(player) {
       //@ts-ignore
       player.showAlert("", function () {
         //@ts-ignore
-        player.showAlert("", function() {}, {
+        player.showAlert("", function() {
+          showNarration(player, "6");
+        }, {
           content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
         })
       }, {
@@ -151,6 +190,7 @@ ScriptApp.onJoinPlayer.Add(function (player) {
   player.name = "첼";
 
   initTag(player);
+  showNarration(player, "3");
   player.sendUpdated();
 
   player.showCenterLabel("지하 1층");
@@ -182,17 +222,6 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
   }
 });
 
-ScriptApp.onLeavePlayer.Add(function (player) {});
-
-ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
-  // ScriptApp.sayToAll(
-  //   `test! / layerId: ${layerID} / x: ${x} / y: ${y} / key: ${key}`
-  // );
-  // if (key) {
-  //   player.disappearObject(key);
-  // }
-});
-
 // F키 눌렸을 때
 ScriptApp.addOnKeyDown(70, function (player) {
   const layer = ScriptMap.getTile(2, player.tileX, player.tileY);
@@ -222,22 +251,7 @@ ScriptApp.addOnKeyDown(70, function (player) {
         if(!player.tag.hasNewArm) {
           //@ts-ignore
           player.showAlert("",function () {
-            //@ts-ignore
-            player.showAlert("", function () {
-              //@ts-ignore
-               player.showAlert("", function() {
-                //한쌍 넣은 후
-                player.tag.hasNewArm = true;
-                if(player.tag.hasNewArm) {
-                  changeArm(player);
-                }
-              }, {
-                content: "인벤토리에 '팔 한 쌍'을 넣었다."
-              })
-            }, {
-              content: "아이템 '팔 한 쌍'을 얻었다.",
-              confirmText: "다음으로"
-            });
+            showNarration(player, "4");
           },
           {
             content: "커다란 상자에 들어있던 것은 쓰레기처럼 아무렇게나 처박혀 있던 앤과 메리였다. 폐기 대기중이었던 것 같다.",
@@ -298,6 +312,25 @@ ScriptApp.addOnKeyDown(70, function (player) {
           player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
         }
         break;
+      
+      case 6:
+        if(player.tag.hasNewArm) {
+          if(!player.tag.isWasteNarration) {
+            showNarration(player, "5");
+            player.tag.isWasteNarration = true;
+            player.spawnAt(111, 36, 4);
+          } else {
+            player.spawnAt(111, 36, 4);
+          }
+        } else {
+          player.showNoteModal("모든 미션을 끝내야 나갈 수 있습니다.");
+        }
     }
   }
+});
+
+// App이 종료되거나 Game Block이 파괴 될 때 실행되는 함수
+ScriptApp.onDestroy.Add(function () {
+	// 앱으로 설치된 모든 오브젝트 삭제
+	ScriptMap.clearAllObjects();
 });
