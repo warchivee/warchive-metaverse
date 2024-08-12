@@ -1,14 +1,27 @@
-/**
- * Copyright (c) 2022 ZEP Co., LTD
- */
-
 import "zep-script";
 
-ScriptApp.showCenterLabel("Hello World");
+let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
+  down: [0, 1, 2, 3, 4],
+  left: [5, 6, 7, 8],
+  right: [9, 10, 11, 12],
+  up: [13, 14, 15, 16, 17],
+});
 
-let zepLogo = ScriptApp.loadSpritesheet("zep_logo.png");
+ScriptApp.onInit.Add(function() {
+  ScriptApp.cameraEffect = 1;
+  ScriptApp.cameraEffectParam1 = 500;
+  ScriptApp.displayRatio = 1;
 
-ScriptMap.putObject(0, 0, zepLogo, { overlap: true });
+  //@ts-ignore
+  ScriptApp.enableFreeView = false;
+});
+
+ScriptApp.onJoinPlayer.Add(function(player) {
+  player.name = "첼";
+  player.sprite = chell;
+  player.hidden = true;
+	player.sendUpdated();
+});
 
 ScriptApp.onDestroy.Add(function () {
   ScriptMap.clearAllObjects();
