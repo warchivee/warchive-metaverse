@@ -17,11 +17,23 @@ let armbrokeCaroline = ScriptApp.loadSpritesheet('armbrokeCaroline.png', 48, 64,
   down: [0],
   right: [9]
 });
+let armbrokeCarolineWalk = ScriptApp.loadSpritesheet('armbrokeCaroline.png', 48, 64, {
+  left: [5,6,7,8],
+  up: [13,14,15,16,17],
+  down: [0,1,2,3,4],
+  right: [9,10,11,12]
+});
 let armFixedCaroline = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48, 64, {
   left: [5],
   up: [13],
   down: [0],
   right: [9]
+});
+let armFixedCarolineWalk = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48, 64, {
+  left: [5,6,7,8],
+  up: [13,14,15,16,17],
+  down: [0,1,2,3,4],
+  right: [9,10,11,12]
 });
 let caroline = ScriptApp.loadSpritesheet('caroline.png');
 
@@ -111,6 +123,7 @@ function initTag(player) {
   player.tag = {
     isOpenedStairs: false,
     isWasteNarration: false,
+    isWalking: false,
     hasCard: false,
     hasNewArm: false,
     hasOldArm: false,
@@ -198,8 +211,8 @@ ScriptApp.onInit.Add(function () {
   //@ts-ignore
   ScriptApp.enableFreeView = false; //스크립트 줌인 방지
   ScriptApp.cameraEffect = 1; // 1 = 비네팅 효과
-  ScriptApp.cameraEffectParam1 = 650; // 비네팅 효과의 범위
-  ScriptApp.displayRatio = 1.5; //화면의 줌을 컨트롤 하는 값
+  ScriptApp.cameraEffectParam1 = 500; // 비네팅 효과의 범위
+  ScriptApp.displayRatio = 1; //화면의 줌을 컨트롤 하는 값
   //@ts-ignore
   ScriptMap.putObjectWithKey(97, 105, caroline, {type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
     impassable: true,
@@ -252,6 +265,7 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
 
       sender.showCustomLabel(htmlStr, 0xffffff, 0xf51400, 200, 60, 0.5);
       initTag(sender);
+      sender.setEffectSprite(armbrokeCaroline, 35, 0, 0);
       sender.sendUpdated();
       sender.spawnAt(119, 42, 2);
     }
@@ -285,8 +299,9 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
       if(!player.tag.hasOldArm) {
         //@ts-ignore
         player.showAlert("",function () {
-          ScriptMap.sayObjectWithKey(key, "미안해…");
-           //@ts-ignore
+          //@ts-ignore
+          player.showAlert("", function () {
+            //@ts-ignore
            player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
@@ -301,6 +316,10 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
             content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
             confirmText: "다음으로"
           });
+          }, {
+            content: "캐롤린: 미안해…",
+            confirmText: "다음으로"
+          } );
         },
         {
           content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
@@ -431,6 +450,44 @@ ScriptApp.addOnKeyDown(70, function (player) {
           player.showNoteModal("모든 미션을 끝내야 나갈 수 있습니다.");
         }
     }
+  }
+});
+
+ScriptApp.onUpdate.Add(function (dt) {  
+  let _players = ScriptApp.players;
+  for (let i in _players) {
+      let p = _players[i];
+      if(p.tag.hasOldArm) {
+        if(p.isMoving !== p.tag.isWalking) {
+          p.tag.isWalking = p.isMoving;
+          if(p.isMoving) {
+            p.setEffectSprite(armFixedCarolineWalk, 35, 0, 0);
+          } else {
+            p.setEffectSprite(armFixedCaroline, 35, 0, 0);
+          }
+          p.sendUpdated();
+        }
+      } else {
+        if(p.isMoving !== p.tag.isWalking) {
+          p.tag.isWalking = p.isMoving;
+          if(p.isMoving) {
+            p.setEffectSprite(armbrokeCarolineWalk, 35, 0, 0);
+          } else {
+            p.setEffectSprite(armbrokeCaroline, 35, 0, 0);
+          }
+          p.sendUpdated();
+        }
+      }
+      // else {
+      //   if(p.isMoving !== p.tag.isWalking) {
+      //     p.tag.isWalking = p.isMoving;
+      //     if(p.isMoving) {
+      //       p.setEffectSprite(armbrokeCarolineWalk, 35, 0, 0);
+      //     } else {
+      //       p.setEffectSprite(armbrokeCaroline, 35, 0, 0);
+      //     }
+      //   }
+      // }
   }
 });
 
