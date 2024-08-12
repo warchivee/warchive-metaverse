@@ -4,7 +4,7 @@
 
 import "zep-script";
 
-let securityGuard = ScriptApp.loadSpritesheet("security_guard.png", 187, 125);
+let securityGuard = ScriptApp.loadSpritesheet("security_guard.png");
 let transparentObject = ScriptApp.loadSpritesheet("transparent.png", 48, 64);
 let plantPot = ScriptApp.loadSpritesheet("plant_pot.png");
 let carolineA = ScriptApp.loadSpritesheet("4-2.png", 48, 64);
