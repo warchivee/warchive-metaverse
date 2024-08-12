@@ -12,7 +12,38 @@ let securityGuard = [
     ];
 let transparentObject = ScriptApp.loadSpritesheet("transparent.png", 48, 64);
 let plantPot = ScriptApp.loadSpritesheet("plant_pot.png");
-let carolineA = ScriptApp.loadSpritesheet("4-2.png", 48, 64);
+let carolineA = ScriptApp.loadSpritesheet("3.png", 48, 64, {
+    down: [0],
+    left: [5],
+    right: [9],
+    up: [13],
+});
+
+let carolineA_Walk = ScriptApp.loadSpritesheet("3.png", 48, 64, {
+    down: [0, 1, 2, 3, 4],
+    left: [5, 6, 7, 8],
+    right: [9, 10, 11, 12],
+    up: [13, 14, 15, 16, 17],
+});
+
+ScriptApp.onUpdate.Add(function (dt) {  
+    let _players = ScriptApp.players;
+    for (let i in _players) {
+        let p = _players[i];
+        if (!p.tag.hasOriginalHead) {
+            if (p.isMoving !== p.tag.isWalking) {
+                p.tag.isWalking = p.isMoving;
+                if (p.isMoving) {
+                    p.setEffectSprite(carolineA_Walk, 35, 0, 0);
+                } else {
+                    p.setEffectSprite(carolineA, 35, 0, 0);
+                }
+                p.sendUpdated();
+                }
+        }
+    }
+});
+
 let carolineB = ScriptApp.loadSpritesheet("5.png", 48, 64, {
     down: [0],
     left: [1],
@@ -30,7 +61,7 @@ let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
 let securityGuardXY = [
     [140, 29],
     [133, 33],
-    [131, 36],
+    [130, 36],
     [118, 30],
     [124, 31],
     [126, 26],
@@ -104,6 +135,8 @@ ScriptApp.onJoinPlayer.Add(function(player){
 	player.hidden = true;
     player.name = "첼";
     player.sprite = chell;
+    //@ts-ignore
+    player.setEffectSprite(carolineA, 35, 0, 0);
 	player.sendUpdated();
 
     player.showCenterLabel(getRegionName(player.tileX, player.tileY));
@@ -112,6 +145,7 @@ ScriptApp.onJoinPlayer.Add(function(player){
         hasItem: false,
         hasPlant: true,
         hasOriginalHead: false,
+        isWalking: false,
         }
 })
 
@@ -131,28 +165,6 @@ ScriptApp.onStart.Add(function () {
             overlap: true,
         })
     };
-
-    ScriptMap.putObjectWithKey(130, 40, carolineA, {
-        key: "carolineA-lobby",
-        overlap: true,
-        //@ts-ignore
-        impassable: true,
-    });
-
-    ScriptMap.putObjectWithKey(92, 140, carolineA, {
-
-        key: "carolineA-sample",
-        overlap: true,
-        //@ts-ignore
-        impassable: true,
-    });
-
-    ScriptMap.putObjectWithKey(29, 92, carolineA, {
-        key: "carolineA-breakroom",
-        overlap: true,
-        //@ts-ignore
-        impassable: true,
-    });
 
     for (let i = 0; i < securityGuardXY.length; i++) {
         const randomIndex = Math.floor(Math.random() * securityGuard.length);
@@ -285,12 +297,6 @@ ScriptApp.addOnKeyDown(70, function(player) {
                         //@ts-ignore
                         player.showAlert("", function () {
                             player.tag.hasOriginalHead = true;
-                            //@ts-ignore
-                            player.disappearObject("carolineA-lobby");
-                            //@ts-ignore
-                            player.disappearObject("carolineA-sample");
-                            //@ts-ignore
-                            player.disappearObject("carolineA-breakroom");
                             //@ts-ignore
                             player.setEffectSprite(carolineB, 35, 0, 0);
                             player.sendUpdated();
