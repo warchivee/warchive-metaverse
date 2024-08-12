@@ -23,9 +23,16 @@ let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
 });
 
 let testObjectXY = [
-    [135, 36],
-    [141, 35],
-    [145, 35],
+    [140, 29],
+    [133, 33],
+    [131, 36],
+    [118, 30],
+    [124, 31],
+    [126, 26],
+    [118, 36],
+    [133, 25],
+    [149, 33],
+    [124, 37]
 ];
 
 let transparentObjectXY = [
@@ -120,7 +127,7 @@ ScriptApp.onStart.Add(function () {
         })
     };
 
-    ScriptMap.putObjectWithKey(131, 40, carolineA, {
+    ScriptMap.putObjectWithKey(130, 40, carolineA, {
         key: "carolineA-lobby",
         overlap: true,
         //@ts-ignore
@@ -128,6 +135,7 @@ ScriptApp.onStart.Add(function () {
     });
 
     ScriptMap.putObjectWithKey(92, 140, carolineA, {
+
         key: "carolineA-sample",
         overlap: true,
         //@ts-ignore
@@ -212,10 +220,12 @@ ScriptApp.addOnKeyDown(70, function(player) {
                         },
                         {
                             content: "아이템 ‘누군가의 머리’를 얻었다.",
+                            confirmText: "다음",
                         });
                     },
                 {
                     content: "유리 장식장을 열고 안드로이드의 머리를 꺼냈다. 메모리 칩은 초기화가 되어 있는 것 같다.",
+                    confirmText: "다음",
                 });
                     player.tag.hasItem = true;
                 }
@@ -232,6 +242,10 @@ ScriptApp.addOnKeyDown(70, function(player) {
                         //@ts-ignore
                         player.showAlert("", function () {
                             //@ts-ignore
+                            player.disappearObject("plant");
+                            player.tag.hasPlant = false;
+
+                            //@ts-ignore
                             player.showAlert("", function () {
                             },
                             {
@@ -240,15 +254,13 @@ ScriptApp.addOnKeyDown(70, function(player) {
                         },
                         {
                             content: "벽을 더듬어 만지니 아주 미세하게 갈라진 틈이 있다. 힘주어 당기니 아주 작고 기나긴 통로가 나왔다.",
+                            confirmText: "다음",
                         });
                     },
-                {
-                    content: "생물이라고는 연구원들 뿐인 이 연구소에 살아있는 진짜 식물이 있었다니. 신기하기도 하고 의아하기도 해 가까이 다가가니 벽에 위화감이 느껴진다.",
-                });
-
-                //@ts-ignore
-                player.disappearObject("plant");
-                player.tag.hasPlant = false;
+                    {
+                        content: "생물이라고는 연구원들 뿐인 이 연구소에 살아있는 진짜 식물이 있었다니. 신기하기도 하고 의아하기도 해 가까이 다가가니 벽에 위화감이 느껴진다.",
+                        confirmText: "다음",
+                    });
                 }
             break;
 
@@ -302,18 +314,22 @@ ScriptApp.addOnKeyDown(70, function(player) {
                                 },
                                 {
                                     content: "아이템 ‘캐롤린의 원본 머리’를 얻었다.",
+                                    confirmText: "다음",
                                 });
                             },
                             {
                                 content: "나는 새로운 안드로이드의 머리에 캐롤린의 메모리를 복사해 이식했다.",
+                                confirmText: "다음",
                             });
                             },
                         {
                             content: "캐롤린을 눕히고 머리를 확인하자 다행히 메모리 칩은 무사하다. 캐롤린과 함께 하려면 이 방법밖에 없다…",
+                            confirmText: "다음",
                         });
                         },
                     {
                         content: "캐롤린의 걸음이 조금씩 느려진다. 아까 공격받았던 머리의 충격이 큰 것 같다.",
+                        confirmText: "다음",
                     });
                 }
                 break;
