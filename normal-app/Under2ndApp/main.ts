@@ -225,6 +225,7 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
             })
           }, {
             content: "아이템 ‘캐롤린의 원본 다리 한 쌍’을 얻었다.",
+            confirmText: "다음"
           })
         }, {
           content: "첼: 밖에 나가서 고칠 수 있을지도 모르잖아. 가져가자. 네 원래 다리인걸. 놔두고 가기 싫어.",
@@ -297,9 +298,11 @@ ScriptApp.addOnKeyDown(70, function(player) {
               });
             }, {
               content: "아이템 ‘긴 막대’를 얻었다.",
+              confirmText: "다음"
             });
           }, {
             content: "기계 장치의 부속품 손잡이를 떼어내서 문을 부술 수 있을 것 같다.",
+            confirmText: "다음"
           });
           
           player.disappearObject("stick");
@@ -327,9 +330,11 @@ ScriptApp.addOnKeyDown(70, function(player) {
               });
             }, {
               content: "아이템 ‘지하 2층 보안카드’를 얻었다.",
+              confirmText: "다음"
             });
           }, {
             content: "캐비닛에서 보안카드를 찾았다.",
+            confirmText: "다음"
           });
 
           player.tag.hasCard = true;  
@@ -364,9 +369,11 @@ ScriptApp.addOnKeyDown(70, function(player) {
               });
             }, {
               content: "아이템 ‘다리 한 쌍’을 얻었다.",
+              confirmText: "다음"
             });
           }, {
             content: "약간 낡고 더럽지만 쓸만한 다리 한 쌍을 찾았다. 캐롤린의 원래 다리와는 조금 다르지만 어쩔 수 없지.",
+            confirmText: "다음"
           });
           
           player.tag.hasLeg = true;  
