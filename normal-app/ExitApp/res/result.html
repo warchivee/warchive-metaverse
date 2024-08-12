@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+
+		::-webkit-scrollbar {
+			display: none;
+		}
+
+		body {
+			-ms-overflow-style: none;
+		}
+
+		.container {
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.box {
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+			width: 300px;
+			height: fit-content;
+            border-radius: 7px;
+			background-color: #adadad;
+		}
+
+        .header {
+            font-weight: bold;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: white;
+            margin: 5px 0px;
+		}
+
+		.footer {
+            width: 40%;
+			justify-self: flex-end;
+			align-self: center;
+            font-weight: bold;
+		}
+
+        button {
+            width: 100%;
+            border: none;
+            box-shadow: none;
+            color: white;
+            font-weight: bold;
+            background-color: #636363;
+            padding: 10px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;    
+        }
+
+        button:hover {
+            background-color: #4a4a4a;
+        }
+	</style>
+	<title>Narration</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="box">
+            <div id="header" class="header">
+            </div>
+            <hr />      
+            <div id="content" class="content">
+            </div>
+            <hr />
+            <div class="footer">
+                <button id="button" onclick="closeWidget()">종료</button>
+            </div>
+		</div>
+	</div>    
+
+    <!-- 선택 결말 정보 -->
+    <script>
+        const narrations = [
+            {
+                title: "새 캐롤린과 나",
+                text: "낡은 캐롤린은 문을 잡지 않은 나머지 한 손으로 자신의 사지를 떼어내기 시작한다. 문이 닫히는 순간 마지막으로 본 것은 그가 목을 스스로 떼어내는 장면이었다."
+            },
+            {
+                title: "낡은 캐롤린과 나",
+                text: "새 캐롤린은 슬퍼한다. 그리고 닫혀가는 문 틈으로 나를 원망스럽게 쳐다보며 살인경비로봇들에게 파괴당한다."
+            },
+            {
+                title: "둘을 내보내고 내가 남는다",
+                text: "문을 열어주었지만 두 캐롤린은 나가지 않는다. 셋 다 곧이어 쫓아온 살인경비로봇들에 의해 파괴당한다."
+            },
+            {
+                title: "둘을 남겨두고 혼자 나간다",
+                text: "두 캐롤린은 첼이 나가는 도중에 문을 잡고 있던 손을 놓는다. 나는 문틈에 끼어 으스러진다. 살인경비로봇들이 들이닥치는 것이 보인다. 의식이 멀어져간다."
+            },
+        ]
+    </script>
+
+    <!-- Widget 관련 함수 -->
+	<script type="text/javascript">
+        function closeWidget() {
+			window.parent.postMessage( { type: "close" }, "*" );
+		}
+        const headerElement = document.getElementById('header');
+        const contentElement = document.getElementById('content');
+        window.addEventListener("message", function (e) {
+            const order = e.data.choice - 1;
+            headerElement.textContent = narrations[order].title;
+            contentElement.textContent = narrations[order].text;
+		});
+    </script>
+</body>
+
+</html>
