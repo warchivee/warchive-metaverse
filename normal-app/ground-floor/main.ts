@@ -4,7 +4,12 @@
 
 import "zep-script";
 
-let securityGuard = ScriptApp.loadSpritesheet("security_guard.png");
+let securityGuard = [
+    ScriptApp.loadSpritesheet("bot1.png"),
+    ScriptApp.loadSpritesheet("bot2.png"),
+    ScriptApp.loadSpritesheet("bot3.png"),
+    ScriptApp.loadSpritesheet("bot4.png"),
+    ];
 let transparentObject = ScriptApp.loadSpritesheet("transparent.png", 48, 64);
 let plantPot = ScriptApp.loadSpritesheet("plant_pot.png");
 let carolineA = ScriptApp.loadSpritesheet("4-2.png", 48, 64);
@@ -89,7 +94,7 @@ interface Region {
 
 ScriptApp.onInit.Add(function() {
     ScriptApp.cameraEffect = 1; // 1 = vignette effect
-	ScriptApp.cameraEffectParam1 = 600; // Sets the range of the vignette effect to 500
+	ScriptApp.cameraEffectParam1 = 500; // Sets the range of the vignette effect to 500
     ScriptApp.displayRatio = 1;
     //@ts-ignore
     ScriptApp.enableFreeView = false;
@@ -150,10 +155,10 @@ ScriptApp.onStart.Add(function () {
     });
 
     for (let i = 0; i < securityGuardXY.length; i++) {
-        ScriptMap.putObjectWithKey(securityGuardXY[i][0], securityGuardXY[i][1], securityGuard, {
+        const randomIndex = Math.floor(Math.random() * securityGuard.length);
+        ScriptMap.putObjectWithKey(securityGuardXY[i][0], securityGuardXY[i][1], securityGuard[randomIndex], {
             key: "guard" + `${i}`,
             overlap: true,
-            movespeed: 60,
         });
     }
 });
@@ -236,7 +241,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
                     player.showNoteModal("생물이라고는 연구원들 뿐인 이 연구소에 살아있는 진짜 식물이 있었다니.");
                 }
 
-                if(player.tag.hasItem && player.tag.hasPlant) {
+                if(player.tag.hasOriginalHead && player.tag.hasPlant) {
                     //@ts-ignore
                     player.showAlert("", function () {
                         //@ts-ignore
