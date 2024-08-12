@@ -43,6 +43,8 @@ let securityGuardXY = [
   [120, 30], // destroy
 ];
 
+let destroyGuard = [6, 7];
+
 interface Region {
   name: string;
   topLeftX: number;
