@@ -11,6 +11,18 @@ let chell = ScriptApp.loadSpritesheet('chell.png', 48, 64, {
   down: [0, 1, 2, 3, 4],
   right: [9, 10, 11, 12]
 });
+let armbrokeCaroline = ScriptApp.loadSpritesheet('armbrokeCaroline.png', 48, 64, {
+  left: [5],
+  up: [13],
+  down: [0],
+  right: [9]
+});
+let armFixedCaroline = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48, 64, {
+  left: [5],
+  up: [13],
+  down: [0],
+  right: [9]
+});
 let caroline = ScriptApp.loadSpritesheet('caroline.png');
 
 interface Region {
@@ -42,7 +54,7 @@ const areas: Area[] = [
   { name: "서류 앞", type: 1, topLeftX: 99, topLeftY: 80, bottomRightX: 99, bottomRightY: 80 },
   { name: "상자 앞", type: 2, topLeftX: 100, topLeftY: 106, bottomRightX: 102, bottomRightY: 107 },
   { name: "보안카드 앞", type: 3, topLeftX: 21, topLeftY: 165, bottomRightX: 22, bottomRightY: 168 },
-  { name: "마네킹 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
+  { name: "누군가의 몸뚱이 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
   { name: "계단 앞", type: 5, topLeftX: 121, topLeftY: 44, bottomRightX: 129, bottomRightY: 49 },
   { name: "폐기물보관실 문 앞", type: 6, topLeftX: 110, topLeftY: 112, bottomRightX: 111, bottomRightY: 113 },
 ];
@@ -166,13 +178,12 @@ ScriptApp.onInit.Add(function () {
   ScriptApp.cameraEffect = 1; // 1 = 비네팅 효과
   ScriptApp.cameraEffectParam1 = 650; // 비네팅 효과의 범위
   ScriptApp.displayRatio = 1.5; //화면의 줌을 컨트롤 하는 값
-  ScriptApp.sendUpdated(); // 앱의 Field값이 변경되면 App.sendUpdated()로 변경값을 적용
-
   //@ts-ignore
   ScriptMap.putObjectWithKey(97, 105, caroline, {type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
     impassable: true,
     key: "caroline",
   })
+  ScriptApp.sendUpdated(); // 앱의 Field값이 변경되면 App.sendUpdated()로 변경값을 적용
 });
 
 // 해당하는 모든 플레이어가 이 이벤트를 통해 App에 입장
@@ -182,11 +193,13 @@ ScriptApp.onJoinPlayer.Add(function (player) {
   player.sprite = chell;
   player.name = "첼";
 
+  player.setEffectSprite(armbrokeCaroline, 35, 0, 0);
+
   initTag(player);
   showNarration(player, "3");
   player.sendUpdated();
 
-  player.showCenterLabel("지하 1층");
+  player.showCenterLabel("지하 1층");  
 });
 
 // 플레이어와 오브젝트가 부딪힐 때 실행
@@ -221,19 +234,15 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
       if(!player.tag.hasOldArm) {
         //@ts-ignore
         player.showAlert("",function () {
-          //@ts-ignore
-          // player.showAlert("", function () {
-           
-          // }, {
-          //   content: "캐롤린: 미안해…",
-          //   confirmText: "다음으로"
-          // });
           ScriptMap.sayObjectWithKey(key, "미안해…");
            //@ts-ignore
            player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
               player.disappearObject(key);
+              player.setEffectSprite(armFixedCaroline, 35, 0, 0);
+              player.sendUpdated();
+              player.tag.hasOldArm = true;
             }, {
               content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
             })
@@ -246,8 +255,6 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
           content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
           confirmText: "다음으로"
         });
-        player.tag.hasOldArm = true;
-        player.sendUpdated();
       } 
     } else {
       player.showNoteModal("캐롤린의 새로운 팔을 먼저 찾으세요.");
