@@ -88,7 +88,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
             player.sendUpdated();
 
             ScriptApp.spawnPlayer(player.id, 53, 28);
-            ScriptApp.cameraEffectParam1 = 700;
+            ScriptApp.cameraEffectParam1 = 300;
           }
         });
         player.tag.widget.sendMessage({
