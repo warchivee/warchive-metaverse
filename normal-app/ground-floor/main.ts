@@ -22,7 +22,7 @@ let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
     up: [13,14,15,16,17],
 });
 
-let testObjectXY = [
+let securityGuardXY = [
     [140, 29],
     [133, 33],
     [131, 36],
@@ -149,8 +149,8 @@ ScriptApp.onStart.Add(function () {
         impassable: true,
     });
 
-    for (let i = 0; i < testObjectXY.length; i++) {
-        ScriptMap.putObjectWithKey(testObjectXY[i][0], testObjectXY[i][1], securityGuard, {
+    for (let i = 0; i < securityGuardXY.length; i++) {
+        ScriptMap.putObjectWithKey(securityGuardXY[i][0], securityGuardXY[i][1], securityGuard, {
             key: "guard" + `${i}`,
             overlap: true,
             movespeed: 60,
