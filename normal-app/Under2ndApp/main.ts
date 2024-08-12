@@ -2,7 +2,22 @@ import "zep-script";
 import { ObjectEffectType, ScriptPlayer, TileEffectType } from "zep-script";
 
 let stick = ScriptApp.loadSpritesheet("stick.png");
-let caroline = ScriptApp.loadSpritesheet("caroline1.png");
+let leg = ScriptApp.loadSpritesheet("broken_leg.png");
+let caroline = ScriptApp.loadSpritesheet("caroline.png");
+
+let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
+  down: [0, 1, 2, 3, 4],
+  left: [5, 6, 7, 8],
+  right: [9, 10, 11, 12],
+  up: [13, 14, 15, 16, 17],
+});
+
+let companion = ScriptApp.loadSpritesheet("2.png", 48, 64, {  
+  down: [0],
+  left: [5],
+  right: [9],
+  up: [13],
+});
 
 interface Region {
   name: string;
@@ -74,20 +89,19 @@ ScriptApp.onInit.Add(function() {
   ScriptApp.enableFreeView = false;
 
   ScriptMap.putObjectWithKey(82, 77, stick, { key: "stick" });
-  ScriptMap.putObjectWithKey(73, 134, caroline, { 
+  ScriptMap.putObjectWithKey(72, 133, caroline, { 
     type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
     impassable: true,
     key: "caroline",
   });
+  ScriptMap.putObjectWithKey(76, 138, leg, { 
+    type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
+    impassable: true,
+    key: "leg",
+  });
 });
 
 ScriptApp.onJoinPlayer.Add(function(player) {
-  player.name = "첼";
-  player.hidden = true;
-  player.sendUpdated();
-  
-  player.showCenterLabel(getRegionName(player.tileX, player.tileY));
-
   player.tag = {
     isOpenedLabA: false,
     isOpenedStairs: false,
@@ -95,13 +109,112 @@ ScriptApp.onJoinPlayer.Add(function(player) {
     hasStick: false,
     hasCard: false,
     hasLeg: false,
+    oldLeg: false,
+    widget: null,
   }
+
+  player.name = "첼";
+  player.sprite = chell;
+  player.hidden = true;
+
+  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+	player.tag.widget.onMessage.Add(function (player, data) {
+		if (data.type == "close") {
+			player.tag.widget.destroy();
+			player.tag.widget = null;
+      
+      player.showCenterLabel(getRegionName(player.tileX, player.tileY));
+		}
+	});
+  player.tag.widget.sendMessage({
+    narration: "2",
+  });
+
+	player.sendUpdated();
 });
 
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
-	if(key){
-	    player.disappearObject(key);
+	if(key === "caroline") {
+    if(player.tag.hasLeg) {
+      //@ts-ignore
+      player.showAlert("", function () {
+        //@ts-ignore
+        player.showAlert("", function () {
+          //@ts-ignore
+          player.showAlert("", function () { }, {
+            content: "캐롤린의 다리를 교체하였기에 지금부터 캐롤린과 동행할 수 있다.",
+          });
+        }, {
+          content: "캐롤린: 아주 좋아. 정말 고마워, 첼. 이젠 내가 너보다 키가 커졌네?",
+          confirmText: "다음"
+        });
+      }, {
+        content: "첼: 어때? 원래 다리와는 조금 다르지만...",
+        confirmText: "다음"
+      });
+
+      player.disappearObject(key);
+      player.tag.hasCompanion = true;
+      
+      player.setEffectSprite(companion, 35, 0, 0);
+      player.sendUpdated();
+    } else {
+      //@ts-ignore
+      player.showAlert("", function () {
+        //@ts-ignore
+        player.showAlert("", function () {
+          //@ts-ignore
+          player.showAlert("", function () { 
+            //@ts-ignore
+            player.showAlert("", function () { }, {
+              content: "첼: 함께 나가자고 했잖아. 괜찮아. 대체할 수 있는 부품을 찾아올게. 조금만 기다려.",
+            })
+          }, {
+            content: "캐롤린:첼! 미안해. 다리가 부서졌어. 이 다리로 탈출은 무리야.",
+            confirmText: "다음"
+          });
+        }, {
+          content: "첼: 캐롤린! 괜찮아? 망가진 거야? 걸을 수 있겠어?",
+          confirmText: "다음"
+        });
+      }, {
+        content: "나는 창백한 얼굴로 누워 있는 캐롤린에게 달려가 그를 껴안았다.",
+        confirmText: "다음"
+      });
+
+    }    
 	}
+
+  if(key === "leg") {
+    if(player.tag.hasCompanion) {
+      //@ts-ignore
+      player.showAlert("", function () {
+        //@ts-ignore
+        player.showAlert("", function () {
+          //@ts-ignore
+          player.showAlert("", function () { 
+            //@ts-ignore
+            player.showAlert("", function () { }, {
+              content: "인벤토리에 아이템 ‘캐롤린의 원본 다리 한 쌍’을 넣었다.",
+            })
+          }, {
+            content: "아이템 ‘캐롤린의 원본 다리 한 쌍’을 얻었다.",
+          })
+        }, {
+          content: "첼: 밖에 나가서 고칠 수 있을지도 모르잖아. 가져가자. 네 원래 다리인걸. 놔두고 가기 싫어.",
+          confirmText: "다음"
+        });
+      }, {
+        content: "캐롤린의 부서진 다리를 들어올리자 캐롤린은 조금 놀란 듯 보인다.",
+        confirmText: "다음"
+      });
+      
+      player.disappearObject(key);
+      player.tag.oldLeg = true;
+    } else {
+      player.showNoteModal("형체를 알아볼 수 없을 정도로 완전히 산산조각나 있다. 경비로봇의 짓이 분명하다.");
+    }
+  }
 });
 
 ScriptApp.addOnKeyDown(70, function(player) {
@@ -236,17 +349,22 @@ ScriptApp.addOnKeyDown(70, function(player) {
 
       case 14:
         if(player.tag.isOpenedStairs) {
-          ScriptApp.spawnPlayer(player.id, 150, 10);
-          return;
+          if(player.tag.oldLeg) {
+            ScriptApp.spawnPlayer(player.id, 150, 10);
+            return;  
+          } else {
+            player.showNoteModal("캐롤린의 부서진 다리가 신경쓰인다...");
+            return;
+          }
         }
-          if(player.tag.hasCard) {
+        if(player.tag.hasCard) {
           player.tag.isOpenedStairs = true;
           player.showNoteModal("‘지하 2층 보안카드’로 문을 열었다.");
         } else {
           player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
         }
         break;
-        
+
       default:
     }  
   }
