@@ -19,6 +19,13 @@ let companion = ScriptApp.loadSpritesheet("2.png", 48, 64, {
   up: [13],
 });
 
+let companionWalk = ScriptApp.loadSpritesheet("2.png", 48, 64, {
+  down: [0, 1, 2, 3, 4],
+  left: [5, 6, 7, 8],
+  right: [9, 10, 11, 12],
+  up: [13, 14, 15, 16, 17],
+});
+
 interface Region {
   name: string;
   topLeftX: number;
@@ -101,11 +108,30 @@ ScriptApp.onInit.Add(function() {
   });
 });
 
+ScriptApp.onUpdate.Add(function (dt) {  
+	let _players = ScriptApp.players;
+	for (let i in _players) {
+		let p = _players[i];
+    if (p.tag.hasCompanion) {
+      if (p.isMoving !== p.tag.isWalking) {
+				p.tag.isWalking = p.isMoving;
+				if (p.isMoving) {
+					p.setEffectSprite(companionWalk, 35, 0, 0);
+				} else {
+					p.setEffectSprite(companion, 35, 0, 0);
+				}
+				p.sendUpdated();
+			}
+    }
+	}
+});
+
 ScriptApp.onJoinPlayer.Add(function(player) {
   player.tag = {
     isOpenedLabA: false,
     isOpenedStairs: false,
     hasCompanion: false,
+    isWalking: false,
     hasStick: false,
     hasCard: false,
     hasLeg: false,
