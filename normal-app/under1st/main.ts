@@ -25,6 +25,24 @@ let armFixedCaroline = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48, 64,
 });
 let caroline = ScriptApp.loadSpritesheet('caroline.png');
 
+let securityGuard = [
+  ScriptApp.loadSpritesheet("bot1.png"),
+  ScriptApp.loadSpritesheet("bot2.png"),
+  ScriptApp.loadSpritesheet("bot3.png"),
+  ScriptApp.loadSpritesheet("bot4.png"),
+  ];
+
+let securityGuardXY = [
+  [118, 40],
+  [108, 39],
+  [103, 36],
+  [124, 39],
+  [129, 36],
+  [117, 35],
+  [124, 33], // destroy
+  [120, 30], // destroy
+];
+
 interface Region {
   name: string;
   topLeftX: number;
@@ -145,6 +163,8 @@ function changeBody(player) {
             //@ts-ignore
             player.showAlert("", function() {
               showNarration(player, "6");
+              //@ts-ignore
+              player.disappearObject("guard" + `${destroyGuard[1]}`);
             }, {
               content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
             })
@@ -184,6 +204,14 @@ ScriptApp.onInit.Add(function () {
     key: "caroline",
   })
   ScriptApp.sendUpdated(); // 앱의 Field값이 변경되면 App.sendUpdated()로 변경값을 적용
+
+  for (let i = 0; i < securityGuardXY.length; i++) {
+    const randomIndex = Math.floor(Math.random() * securityGuard.length);
+    ScriptMap.putObjectWithKey(securityGuardXY[i][0], securityGuardXY[i][1], securityGuard[randomIndex], {
+        key: "guard" + `${i}`,
+        overlap: true,
+    });
+  }
 });
 
 // 해당하는 모든 플레이어가 이 이벤트를 통해 App에 입장
@@ -225,6 +253,27 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
       sender.sendUpdated();
       sender.spawnAt(119, 42, 2);
     }
+  }
+});
+
+ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
+  if(key.startsWith("guard")) {
+      const parentStyle = `display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center;`;
+
+      const warn = `font-size: 20px;
+      font-weight: bold;`;
+
+      let htmlStr = `<span style="${parentStyle}">
+      <span style="${warn}">경고</span>
+      <span style="firstRow">경비 로봇에게 들키지 않도록 주의하세요.</span>
+      </span>`;
+
+      ScriptMap.sayObjectWithKey(key, "불량 안드로이드를 처리했다!");
+      ScriptApp.spawnPlayer(`${player.id}`, 119, 45);
+      player.showCustomLabel(htmlStr, 0xffffff, 0xf51400, 200, 60, 0.5);
   }
 });
 
@@ -370,6 +419,8 @@ ScriptApp.addOnKeyDown(70, function (player) {
           if(!player.tag.isWasteNarration) {
             showNarration(player, "5");
             player.tag.isWasteNarration = true;
+            //@ts-ignore
+            player.disappearObject("guard" + `${destroyGuard[0]}`);
             player.spawnAt(111, 36, 4);
           } else {
             player.spawnAt(111, 36, 4);
