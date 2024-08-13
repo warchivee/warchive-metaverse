@@ -170,7 +170,7 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   player.sprite = chell;
   player.hidden = true;
 
-  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+  player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
 	player.tag.widget.onMessage.Add(function (player, data) {
 		if (data.type == "close") {
 			player.tag.widget.destroy();
@@ -210,7 +210,7 @@ ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
 	if(key === "caroline") {
     if(!player.tag.foundCompanion) {
-      player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+      player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
       player.tag.widget.onMessage.Add(function (player, data) {
         if (data.type == "close") {
           player.tag.widget.destroy();
@@ -223,7 +223,7 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
       player.tag.foundCompanion = true;
     } else {
       if(player.tag.hasLeg) {
-        player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+        player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
         player.tag.widget.onMessage.Add(function (player, data) {
           if (data.type == "close") {
             player.tag.widget.destroy();
@@ -249,7 +249,7 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
   if(key === "leg") {
     if(player.tag.hasCompanion) {
 
-      player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+      player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
       player.tag.widget.onMessage.Add(function (player, data) {
         if (data.type == "close") {
           player.tag.widget.destroy();
