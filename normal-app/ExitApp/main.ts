@@ -22,7 +22,7 @@ function isDoor(x: number, y: number): boolean {
 
 function showEnding(player, choice) {
   ScriptApp.spawnPlayer(player.id, 100, 50);
-  player.tag.widget = player.showWidget("result.html", "middle", 480, 620);
+  player.tag.widget = player.showWidget("result.html", "middle", 5000, 5000);
   player.tag.widget.onMessage.Add(function (player, data) {
     if (data.type == "close") {
       player.tag.widget.destroy();

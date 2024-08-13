@@ -28,54 +28,48 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+            background-color: black;
 		}
 
-		.box {
-			padding: 10px;
-			display: flex;
-			flex-direction: column;
-			width: 300px;
-			height: 200px;
-            border-radius: 7px;
-			background-color: #adadad;
-		}
-
-        .header {
-            font-weight: bold;
+        .box {
+            width: 960px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-
-        hr {
-            border: 0;
-            height: 1px;
-            background-color: white;
-            margin: 5px 0px;
-		}
 
         .content {
-            height: 100%;
+            width: fit-content;
+            height: 100px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        hr {
+            border: 0;
+            height: 1px; 
+            background-color: white;
+            margin: 10px 0px;
         }
 
-		.footer {
-            width: 40%;
-			justify-self: flex-end;
-			align-self: center;
-            font-weight: bold;
-		}
-
         button {
-            width: 100%;
+            width: fit-content;
+            height: 40px;
             border: none;
             box-shadow: none;
             color: white;
             font-weight: bold;
             background-color: #636363;
-            padding: 10px 20px;
+            padding: 10px 80px;
             border-radius: 7px;
             cursor: pointer;
             text-align: center;
-            display: inline-block;    
+            display: inline-block;  
         }
-
+        
         button:hover {
             background-color: #4a4a4a;
         }
@@ -84,19 +78,13 @@
 </head>
 
 <body>
-	<div class="container">
-		<div class="box">
-            <div id="header" class="header">
-            </div>
-            <hr />      
-            <div id="content" class="content">
-            </div>
+    <div class="container">
+        <div class="box">
+            <div id="content" class="content"></div>
             <hr />
-            <div class="footer">
-                <button id="button" onclick="updateDialogue()">다음</button>
-            </div>
-		</div>
-	</div>    
+            <button id="button" onclick="updateDialogue()">다음</button>    
+        </div>
+    </div>
 
     <!-- 선택 결말 정보 -->
     <script>
@@ -104,32 +92,45 @@
             {
                 title: "새 캐롤린과 나",
                 dialogue: [
-                    { text: "낡은 캐롤린은 문을 잡지 않은 나머지 한 손으로 자신의 사지를 떼어내기 시작한다." },
+                    { text: "나는 새 캐롤린과 함께 탈출하기로 결심했다." },
+                    { text: "새 캐롤린의 손을 잡고 문을 열자 지금껏 맡아본 적 없는 신선한 공기가 느껴진다.\n뒤를 돌아보자 반쯤 닫혀가는 무거운 문 사이로 낡은 캐롤린이 보였다." },
+                    { text: "낡은 캐롤린은 문을 잡지 않은 나머지 한 손으로 자신의 사지를 떼어내기 시작했다." },
                     { text: "문이 닫히는 순간 마지막으로 본 것은 그가 목을 스스로 떼어내는 장면이었다." },
                 ]
             },
             {
                 title: "낡은 캐롤린과 나",
                 dialogue: [
-                    { text: "새 캐롤린은 슬퍼한다." },
-                    { text: "그리고 닫혀가는 문 틈으로 나를 원망스럽게 쳐다보며 살인경비로봇들에게 파괴당한다." },
+                    { text: "나는 낡은 캐롤린과 함께 탈출하기로 결심했다." },
+                    { text: "낡은  캐롤린의 손을 잡고 문을 열자 지금껏 맡아본 적 없는 신선한 공기가 느껴진다. " },
+                    { text: "뒤를 돌아보자 반쯤 닫혀가는 무거운 문 사이로 새 캐롤린이 보였다.\n새 캐롤린은 슬픈 표정으로 낡은 캐롤린을 바라보았다.\n그리고 닫혀가는 문 틈으로 나를 원망스럽게 쳐다보며 살인경비로봇들에게 파괴당했다." },
                 ]
             },
             {
                 title: "둘을 내보내고 내가 남는다",
                 dialogue: [
-                    { text: "문을 열어주었지만 두 캐롤린은 나가지 않는다." },
-                    { text: "셋 다 곧이어 쫓아온 살인경비로봇들에 의해 파괴당한다." },
+                    { text: "나는 두 캐롤린을 내보내고 내가 남기로 결정했다." },
+                    { text: "문을 열어주었지만 두 캐롤린은 나가지 않았다." },
+                    { text: "곧이어 쫓아온 살인경비로봇들에 의해 우리는 모두 파괴당했다." },
                 ]
             },
             {
                 title: "둘을 남겨두고 혼자 나간다",
                 dialogue: [
-                    { text: "두 캐롤린은 첼이 나가는 도중에 문을 잡고 있던 손을 놓는다." },
-                    { text: "나는 문틈에 끼어 으스러진다." },
-                    { text: "살인경비로봇들이 들이닥치는 것이 보인다. 의식이 멀어져간다." },
+                    { text: "나는 두 캐롤린을 남겨두고 혼자 탈출하기로 결정했다." },
+                    { text: "둘은 내가 나가는 도중에 문을 잡고 있던 손을 놓았다." },
+                    { text: "나는 문틈에 끼어 으스러진다. " },
+                    { text: "살인경비로봇들이 들이닥치는 것이 보인다. " },
+                    { text: "…" },
+                    { text: "의식이 멀어져간다. " },
                 ]
             },
+            {
+                title: "공통",
+                dialogue: [
+                    { text: "캐롤린과 캐롤린\nGAME CLEAR" },
+                ]
+            }
         ]
     </script>
 
@@ -141,18 +142,24 @@
 
         let currentNarrationIndex = 0;
         let currentDialogueIndex = 0;
-        const headerElement = document.getElementById('header');
+        let index = 0;
+        let text = "";
         const contentElement = document.getElementById('content');
         const buttonElement = document.getElementById('button');
-        
+
         window.addEventListener("message", function (e) {
             currentNarrationIndex = e.data.choice - 1;
             updateNarration();
 		});
 
         function updateDialogue() {
+            if (index < text.length) {
+                setText();
+                return;
+            }
+
             currentDialogueIndex++;
-            if (currentDialogueIndex < narrations[currentNarrationIndex].dialogue.length) {
+            if (currentDialogueIndex < narrations[currentNarrationIndex].dialogue.length + 1) {
                 updateNarration();
             } else {
                 closeWidget();
@@ -161,15 +168,34 @@
 
         function updateNarration() {
             const narration = narrations[currentNarrationIndex];
-            const dialogue = narration.dialogue;
+            const dialogue = [...narration.dialogue, ...narrations[4].dialogue];
             
-            headerElement.textContent = narration.title;
-            contentElement.textContent = dialogue[currentDialogueIndex].text;
+            text = dialogue[currentDialogueIndex].text;
+            contentElement.textContent = "";
+            index = 0;
+            showText();
             if (currentDialogueIndex < dialogue.length - 1) {
                 buttonElement.textContent = '다음';
             } else {
                 buttonElement.textContent = '종료';
             }
+        }
+
+        function showText() {
+            if(index < text.length) {
+                if (text[index] === '\n') {
+                    contentElement.innerHTML += '<br>';
+                } else {
+                    contentElement.innerHTML += text[index];
+                }
+                index++;
+                setTimeout(showText, 50);
+            }
+        }
+
+        function setText() {
+            index = text.length;
+            contentElement.innerHTML = text.replace(/\n/g, '<br>');
         }
     </script>
 </body>
