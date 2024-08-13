@@ -142,6 +142,9 @@ function showNarration(player, narrationNumber:string) {
           if(narrationNumber === "4") {
             getNewArm(player);
           }
+          if(narrationNumber === "5") {
+            player.spawnAt(93, 198, 4);
+          }
       }
   });
   player.tag.widget.sendMessage({
@@ -161,7 +164,7 @@ function getNewArm(player) {
     })
   }, {
     content: "아이템 '팔 한 쌍'을 얻었다.",
-    confirmText: "다음으로"
+    confirmText: "다음"
   });
 }
 
@@ -185,20 +188,20 @@ function changeBody(player) {
             })
           }, {
             content: "인벤토리에 아이템 ‘캐롤린의 원본 몸통’을 넣었다.",
-            confirmText: "다음으로"
+            confirmText: "다음"
           });
         }, {
           content: "캐롤린은 정신을 잃었다.",
-          confirmText: "다음으로"
+          confirmText: "다음"
         })
       }, {
         content: "캐롤린: …….",
-        confirmText: "다음으로"
+        confirmText: "다음"
       });
     },
     {
       content: "캐롤린은 숨을 쉬기 어려워 보인다. 빠르게 몸을 교체해주었다.",
-      confirmText: "다음으로"
+      confirmText: "다음"
     });
     player.tag.hasOldBody = true;
     player.sendUpdated();
@@ -248,6 +251,7 @@ ScriptApp.onJoinPlayer.Add(function (player) {
 // 플레이어와 오브젝트가 부딪힐 때 실행
 ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
   if (obj !== null) {
+    //@ts-ignore
     if (obj.param1 === "staff") {
       const parentStyle = `display: flex; 
                            flex-direction: column; 
@@ -293,6 +297,7 @@ ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
   }
 });
 
+//@ts-ignore
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
   if(key==="caroline") {
     if(player.tag.hasNewArm) {
@@ -314,16 +319,16 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
             })
           }, {
             content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
-            confirmText: "다음으로"
+            confirmText: "다음"
           });
           }, {
             content: "캐롤린: 미안해…",
-            confirmText: "다음으로"
+            confirmText: "다음"
           } );
         },
         {
           content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
-          confirmText: "다음으로"
+          confirmText: "다음"
         });
       } 
     } else {
@@ -354,12 +359,12 @@ ScriptApp.addOnKeyDown(70, function (player) {
               })
             }, {
               content: "캐롤린의 안색이 창백해졌다.",
-              confirmText: "다음으로"
+              confirmText: "다음"
             });
           },
           {
             content: "오늘 당직 연구원의 이름은 앤이다. 이름이 같은 것을 보니 앤을 개발 담당한 사람인 듯하다.",
-            confirmText: "다음으로"
+            confirmText: "다음"
           }
         );
         break;
@@ -381,14 +386,15 @@ ScriptApp.addOnKeyDown(70, function (player) {
           //@ts-ignore
           player.showAlert("", function() {
             //@ts-ignore
-            player.showAlert("", function() {}, {
+            player.showAlert("", function() {
+              player.tag.hasCard = true;
+            }, {
               content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다.",
             })
           }, {
             content: "아이템 ‘지하 1층 보안카드’를 얻었다.",
-            confirmText: "다음으로"
+            confirmText: "다음"
           });
-          player.tag.hasCard = true;
         }
         break;
       
@@ -410,11 +416,11 @@ ScriptApp.addOnKeyDown(70, function (player) {
               })
             }, {
               content: "아이템 ‘누군가의 몸뚱이’를 얻었다.",
-              confirmText: "다음으로"
+              confirmText: "다음"
             });
           }, {
             content: "컨베이어 벨트 위에 아무렇게나 놓여진 누군가의 몸뚱이가 보인다. 머리만 누군가 떼어간 듯이 손상되지 않은 멀쩡한 몸이다. 머리만…?",
-            confirmText: "다음으로"
+            confirmText: "다음"
           });
         }
         break;
