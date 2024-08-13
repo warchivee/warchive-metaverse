@@ -35,7 +35,6 @@ let armFixedCarolineWalk = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48,
   down: [0,1,2,3,4],
   right: [9,10,11,12]
 });
-let caroline = ScriptApp.loadSpritesheet('caroline.png');
 
 let securityGuard = [
   ScriptApp.loadSpritesheet("bot1.png"),
@@ -89,6 +88,7 @@ const areas: Area[] = [
   { name: "누군가의 몸뚱이 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
   { name: "계단 앞", type: 5, topLeftX: 121, topLeftY: 44, bottomRightX: 129, bottomRightY: 49 },
   { name: "폐기물보관실 문 앞", type: 6, topLeftX: 110, topLeftY: 112, bottomRightX: 111, bottomRightY: 113 },
+  { name: "마네킹 앞", type: 7, topLeftX: 104, topLeftY: 109, bottomRightX: 108, bottomRightY: 110 },
 ];
 
 function getRegionName(x: number, y: number): string | null {
@@ -216,11 +216,6 @@ ScriptApp.onInit.Add(function () {
   ScriptApp.cameraEffect = 1; // 1 = 비네팅 효과
   ScriptApp.cameraEffectParam1 = 500; // 비네팅 효과의 범위
   ScriptApp.displayRatio = 1; //화면의 줌을 컨트롤 하는 값
-  //@ts-ignore
-  ScriptMap.putObjectWithKey(97, 105, caroline, {type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
-    impassable: true,
-    key: "caroline",
-  })
   ScriptApp.sendUpdated(); // 앱의 Field값이 변경되면 App.sendUpdated()로 변경값을 적용
 
   for (let i = 0; i < securityGuardXY.length; i++) {
@@ -270,8 +265,8 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
       sender.showCustomLabel(htmlStr, 0xffffff, 0xf51400, 200, 60, 0.5);
       initTag(sender);
       sender.setEffectSprite(armbrokeCaroline, 35, 0, 0);
+      sender.spawnAt(114, 38, 2);
       sender.sendUpdated();
-      sender.spawnAt(119, 42, 2);
     }
   }
 });
@@ -299,43 +294,7 @@ ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
 
 //@ts-ignore
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
-  if(key==="caroline") {
-    if(player.tag.hasNewArm) {
-      if(!player.tag.hasOldArm) {
-        //@ts-ignore
-        player.showAlert("",function () {
-          //@ts-ignore
-          player.showAlert("", function () {
-            //@ts-ignore
-           player.showAlert("", function () {
-            //@ts-ignore
-            player.showAlert("", function() {
-              player.disappearObject(key);
-              player.setEffectSprite(armFixedCaroline, 35, 0, 0);
-              player.sendUpdated();
-              player.tag.hasOldArm = true;
-            }, {
-              content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
-            })
-          }, {
-            content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
-            confirmText: "다음"
-          });
-          }, {
-            content: "캐롤린: 미안해…",
-            confirmText: "다음"
-          } );
-        },
-        {
-          content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
-          confirmText: "다음"
-        });
-      } 
-    } else {
-      player.showNoteModal("캐롤린의 새로운 팔을 먼저 찾으세요.");
-    }
-
-  }
+  
 });
 
 // F키 눌렸을 때
@@ -455,6 +414,43 @@ ScriptApp.addOnKeyDown(70, function (player) {
         } else {
           player.showNoteModal("모든 미션을 끝내야 나갈 수 있습니다.");
         }
+        break;
+
+      case 7:
+        if(player.tag.hasNewArm) {
+          if(!player.tag.hasOldArm) {
+            //@ts-ignore
+            player.showAlert("",function () {
+              //@ts-ignore
+              player.showAlert("", function () {
+                //@ts-ignore
+               player.showAlert("", function () {
+                //@ts-ignore
+                player.showAlert("", function() {
+                  // player.disappearObject(key);
+                  player.setEffectSprite(armFixedCaroline, 35, 0, 0);
+                  player.tag.hasOldArm = true;
+                  player.sendUpdated();
+                }, {
+                  content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
+                })
+              }, {
+                content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
+                confirmText: "다음"
+              });
+              }, {
+                content: "캐롤린: 미안해…",
+                confirmText: "다음"
+              } );
+            },
+            {
+              content: "캐롤린은 누구에게 사과하는 것인지, 팔을 교체하는 동안 내내 흐느꼈다.",
+              confirmText: "다음"
+            });
+          } 
+        } else {
+          player.showNoteModal("캐롤린의 새로운 팔을 먼저 찾으세요.");
+        }
     }
   }
 });
@@ -484,16 +480,6 @@ ScriptApp.onUpdate.Add(function (dt) {
           p.sendUpdated();
         }
       }
-      // else {
-      //   if(p.isMoving !== p.tag.isWalking) {
-      //     p.tag.isWalking = p.isMoving;
-      //     if(p.isMoving) {
-      //       p.setEffectSprite(armbrokeCarolineWalk, 35, 0, 0);
-      //     } else {
-      //       p.setEffectSprite(armbrokeCaroline, 35, 0, 0);
-      //     }
-      //   }
-      // }
   }
 });
 
