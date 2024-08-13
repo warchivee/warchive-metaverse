@@ -146,7 +146,7 @@ ScriptApp.onJoinPlayer.Add(function(player){
         hasPlant: true,
         hasOriginalHead: false,
         isWalking: false,
-        }
+        };
 })
 
 ScriptApp.onStart.Add(function () {
@@ -307,7 +307,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
                                     //@ts-ignore
                                     player.showAlert("", function () {
                                         // @ts-ignore
-                                        player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+                                        player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
                                         player.tag.widget.onMessage.Add(function (player, data) {
                                             if (data.type == "close") {
                                                 player.tag.widget.destroy();
