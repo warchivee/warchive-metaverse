@@ -156,6 +156,7 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   player.tag = {
     isOpenedLabA: false,
     isOpenedStairs: false,
+    foundCompanion: false,
     hasCompanion: false,
     isWalking: false,
     hasStick: false,
@@ -208,62 +209,51 @@ ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
 
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
 	if(key === "caroline") {
-    if(player.tag.hasLeg) {
-      //@ts-ignore
-      player.showAlert("", function () {
-        //@ts-ignore
-        player.showAlert("", function () {
-          //@ts-ignore
-          player.showAlert("", function () { }, {
-            content: "캐롤린의 다리를 교체하였기에 지금부터 캐롤린과 동행할 수 있다.",
-          });
-        }, {
-          content: "캐롤린: 아주 좋아. 정말 고마워, 첼. 이젠 내가 너보다 키가 커졌네?",
-          confirmText: "다음"
-        });
-      }, {
-        content: "첼: 어때? 원래 다리와는 조금 다르지만...",
-        confirmText: "다음"
+    if(!player.tag.foundCompanion) {
+      player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+      player.tag.widget.onMessage.Add(function (player, data) {
+        if (data.type == "close") {
+          player.tag.widget.destroy();
+          player.tag.widget = null;
+        }
       });
-
-      player.disappearObject(key);
-      player.tag.hasCompanion = true;
-      
-      player.setEffectSprite(companion, 35, 0, 0);
-      player.sendUpdated();
+      player.tag.widget.sendMessage({
+        narration: "10",
+      });
+      player.tag.foundCompanion = true;
     } else {
-      //@ts-ignore
-      player.showAlert("", function () {
-        //@ts-ignore
-        player.showAlert("", function () {
-          //@ts-ignore
-          player.showAlert("", function () { 
+      if(player.tag.hasLeg) {
+        player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+        player.tag.widget.onMessage.Add(function (player, data) {
+          if (data.type == "close") {
+            player.tag.widget.destroy();
+            player.tag.widget = null;
             //@ts-ignore
             player.showAlert("", function () { }, {
-              content: "첼: 함께 나가자고 했잖아. 괜찮아. 대체할 수 있는 부품을 찾아올게. 조금만 기다려.",
-            })
-          }, {
-            content: "캐롤린:첼! 미안해. 다리가 부서졌어. 이 다리로 탈출은 무리야.",
-            confirmText: "다음"
-          });
-        }, {
-          content: "첼: 캐롤린! 괜찮아? 망가진 거야? 걸을 수 있겠어?",
-          confirmText: "다음"
+              content: "캐롤린의 다리를 교체하였기에 지금부터 캐롤린과 동행할 수 있다.",
+            });
+          }
         });
-      }, {
-        content: "나는 창백한 얼굴로 누워 있는 캐롤린에게 달려가 그를 껴안았다.",
-        confirmText: "다음"
-      });
-
-    }    
-	}
+        player.tag.widget.sendMessage({
+          narration: "11",
+        });
+      
+        player.disappearObject(key);
+        player.tag.hasCompanion = true;
+        player.setEffectSprite(companion, 35, 0, 0);
+        player.sendUpdated();
+      }
+    }
+  }
 
   if(key === "leg") {
     if(player.tag.hasCompanion) {
-      //@ts-ignore
-      player.showAlert("", function () {
-        //@ts-ignore
-        player.showAlert("", function () {
+
+      player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+      player.tag.widget.onMessage.Add(function (player, data) {
+        if (data.type == "close") {
+          player.tag.widget.destroy();
+          player.tag.widget = null;
           //@ts-ignore
           player.showAlert("", function () { 
             //@ts-ignore
@@ -274,19 +264,16 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
             content: "아이템 ‘캐롤린의 원본 다리 한 쌍’을 얻었다.",
             confirmText: "다음"
           })
-        }, {
-          content: "첼: 밖에 나가서 고칠 수 있을지도 모르잖아. 가져가자. 네 원래 다리인걸. 놔두고 가기 싫어.",
-          confirmText: "다음"
-        });
-      }, {
-        content: "캐롤린의 부서진 다리를 들어올리자 캐롤린은 조금 놀란 듯 보인다.",
-        confirmText: "다음"
+        }
       });
-      
+      player.tag.widget.sendMessage({
+        narration: "12",
+      });
+
       player.disappearObject(key);
       player.tag.oldLeg = true;
     } else {
-      player.showNoteModal("형체를 알아볼 수 없을 정도로 완전히 산산조각나 있다. 경비로봇의 짓이 분명하다.");
+      player.showNoteModal("캐롤린의 다리가 형체를 알아볼 수 없을 정도로 완전히 산산조각나 있다. 경비로봇의 짓이 분명하다.");
     }
   }
 });
