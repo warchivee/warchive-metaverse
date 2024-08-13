@@ -26,6 +26,24 @@ let companionWalk = ScriptApp.loadSpritesheet("2.png", 48, 64, {
   up: [13, 14, 15, 16, 17],
 });
 
+let securityGuard = [
+  ScriptApp.loadSpritesheet("bot1.png"),
+  ScriptApp.loadSpritesheet("bot2.png"),
+  ScriptApp.loadSpritesheet("bot3.png"),
+  ScriptApp.loadSpritesheet("bot4.png"),
+];
+
+let securityGuardXY = [
+  [33, 23],
+  [33, 29],
+  [38, 20],
+  [48, 26],
+  [38, 26],
+  [25, 33],
+  [22, 25],
+  [45, 33]
+];
+
 interface Region {
   name: string;
   topLeftX: number;
@@ -66,6 +84,7 @@ const areas: Area[] = [
   { name: '실험소모품창고 캐비닛 3', type: 12, topLeftX: 85, topLeftY: 175, bottomRightX: 87, bottomRightY: 176 },
   { name: '실험소모품창고 상자', type: 13, topLeftX: 83, topLeftY: 175, bottomRightX: 84, bottomRightY: 176 },
   { name: '비상계단', type: 14, topLeftX: 39, topLeftY: 35, bottomRightX: 45, bottomRightY: 39 },
+  { name: '엘리버에터', type: 15, topLeftX: 53, topLeftY: 26, bottomRightX: 59, bottomRightY: 29 },
 ];
 
 function getRegionName(x: number, y: number): string | null {
@@ -106,6 +125,13 @@ ScriptApp.onInit.Add(function() {
     impassable: true,
     key: "leg",
   });
+  for (let i = 0; i < securityGuardXY.length; i++) {
+    const randomIndex = Math.floor(Math.random() * securityGuard.length);
+    ScriptMap.putObjectWithKey(securityGuardXY[i][0], securityGuardXY[i][1], securityGuard[randomIndex], {
+        key: "guard" + `${i}`,
+        overlap: true,
+    });
+  }
 });
 
 ScriptApp.onUpdate.Add(function (dt) {  
@@ -157,6 +183,27 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   });
 
 	player.sendUpdated();
+});
+
+ScriptApp.onAppObjectTouched.Add(function (player, key, x, y) {
+  if(key.startsWith("guard")) {
+    const parentStyle = `display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center;`;
+
+    const warn = `font-size: 20px;
+    font-weight: bold;`;
+
+    let htmlStr = `<span style="${parentStyle}">
+    <span style="${warn}">경고</span>
+    <span style="firstRow">경비 로봇에게 들키지 않도록 주의하세요.</span>
+    </span>`;
+
+    ScriptMap.sayObjectWithKey(key, "불량 안드로이드를 처리했다!");
+    ScriptApp.spawnPlayer(`${player.id}`, 36, 21);
+    player.showCustomLabel(htmlStr, 0xffffff, 0xf51400, 200, 60, 0.5);
+  }
 });
 
 ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
@@ -398,6 +445,10 @@ ScriptApp.addOnKeyDown(70, function(player) {
         }
         break;
 
+      case 15:
+        player.showNoteModal("작동하려면 연구원의 지문이 필요하다. 인공 피부의 지문은 통하지 않는다. 포기하고 다른 길을 찾아보자.");
+        break;
+      
       default:
     }  
   }
