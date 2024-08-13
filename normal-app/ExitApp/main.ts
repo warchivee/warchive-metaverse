@@ -57,7 +57,7 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   player.sendUpdated();
   player.hidden = true;
 
-  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+  player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
 	player.tag.widget.onMessage.Add(function (player, data) {
 		if (data.type == "close") {
 			player.tag.widget.destroy();
@@ -78,7 +78,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
     if(player.tag.hasCompanion) {
       //@ts-ignore
       player.showAlert("", function () {
-        player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+        player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
         player.tag.widget.onMessage.Add(function (player, data) {
           if (data.type == "close") {
             player.tag.widget.destroy();
