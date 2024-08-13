@@ -134,7 +134,7 @@ function initTag(player) {
 }
 
 function showNarration(player, narrationNumber:string) {
-  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+  player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
   player.tag.widget.onMessage.Add(function (player, data) {
       if (data.type == "close") {
           player.tag.widget.destroy();
