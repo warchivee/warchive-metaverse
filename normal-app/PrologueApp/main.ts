@@ -25,15 +25,12 @@ ScriptApp.onJoinPlayer.Add(function(player) {
     widget: null,
   }
 
-  player.tag.widget = player.showWidget("narration.html", "middle", 480, 620);
+  player.tag.widget = player.showWidget("narration.html", "middle", 5000, 5000);
 	player.tag.widget.onMessage.Add(function (player, data) {
 		if (data.type == "close") {      
       ScriptApp.spawnPlayer(player.id, 11, 10);
 		}
 	});
-  player.tag.widget.sendMessage({
-    narration: "1",
-  });
 });
 
 ScriptApp.onDestroy.Add(function () {

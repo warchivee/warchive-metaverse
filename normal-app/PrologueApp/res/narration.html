@@ -28,262 +28,80 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+            background-color: black;
 		}
 
-		.box {
-			padding: 10px;
-			display: flex;
-			flex-direction: column;
-			width: 300px;
-			height: 450px;
-            border-radius: 7px;
-			background-color: #adadad;
-		}
-
-		.header {
-			display: flex;
-			justify-content: space-between;
-            font-weight: bold;
-		}
+        .box {
+            width: 960px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
         .content {
-			display: flex;
-			height: 200px;
-			justify-content: center;
-            margin: 5px 0px;
-            border-radius: 7px;
-			align-items: center;
-			background-color: #636363;
-            overflow: hidden;
-		}
-
-        .narration {
-            width: 100%;
-            height: 171px;
-        }
-
-        .narr-name {
-            width: 100%;
-            height: 21px;
-            font-weight: bold;
+            width: fit-content;
+            height: 100px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
         }
         
-        .narr-text{
-            width: 100%;
-            height: 135px;
+        hr {
+            border: 0;
+            height: 1px; 
+            background-color: white;
+            margin: 10px 0px;
         }
 
-		hr {
-            border: 0;
-            height: 1px;
-            background-color: white;
-            margin: 5px 0px;
-		}
-
-		.footer {
-            width: 40%;
-			justify-self: flex-end;
-			align-self: center;
-            font-weight: bold;
-		}
-
         button {
-            width: 100%;
+            width: fit-content;
+            height: 40px;
             border: none;
             box-shadow: none;
             color: white;
             font-weight: bold;
             background-color: #636363;
-            padding: 10px 20px;
+            padding: 10px 80px;
             border-radius: 7px;
             cursor: pointer;
             text-align: center;
-            display: inline-block;    
+            display: inline-block;  
         }
-
+        
         button:hover {
             background-color: #4a4a4a;
         }
-
-        img,
-		.cover {
-			width: 100%;
-			height: 100%;
-			object-fit: contain;
-		}
-
 	</style>
 	<title>Narration</title>
 </head>
 
 <body>
-	<div class="container">
-		<div class="box">
-			<div id="content" class="content">
-            </div>
-            <div id="narration" class="narration">
-                <div id="narr-name" class="narr-name"></div>
-                <div id="narr-text" class="narr-text"></div>
-            </div>
-			<hr />
-			<div class="footer">
-				<button id="button" onclick="updateDialogue()">다음</button>
-			</div>
-		</div>
-	</div>    
+    <div class="container">
+        <div class="box">
+            <div id="content" class="content"></div>
+            <hr />
+            <button id="button" onclick="updateDialogue()">다음</button>    
+        </div>
+    </div>
 
-    <!-- 얼굴 일러스트의 Base64 데이터 -->
+    <!-- 선택 결말 정보 -->
     <script>
-        const images = {
-            faceMary: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAAGVsnJAAAAGFBMVEVHcEz/+OvW1tbBwcF2b3JaWloyKUcnJzavfqvoAAAAAXRSTlMAQObYZgAABHRJREFUeNrt3NuN2zAQQNG0kBbYglpwC9tC0kHYfoxgBAysB72MrId97k8QOJY5B/oYbLz6IUmSJEmSJEmSJEmStGX1mwEAAAAAAAAA3mfwYaWve8NDNQUAAAAAAAAAeI/BS+orlV+fgwAAAAAAAAAAXKPW4Hn4GHjy+tJiBAAAAAAAAAC4zvJTotnhn2wOAgAAAAAAAABwvuGbg0elo/G6NQIAAAAAAAAAXGv40tUUsEYAAAAAAAAAgGPbc/j8A5IaAQAAAAAAAACOX4LKQlsOn8sIAAAAAAAAAIDrLkE97x0iAAAAAAAAAMB1h+9aoDJABAAAAAAAAADYr+1+ENKPN0QAAAAAAAAAgKP+Q6R/+C3w8jIEAAAAAAAAAHjHJaiNAAAAAAAAAADYpz2WIAAAAAAAAADABwHEewEAAAAAAAAA5wfY4cuRXQgAAAAAAAAAgIMAYgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwGcBDNHsYVMAAAAAAAAAgPcBGB5aO3AOAAAAAAAAAHBNgCHKAE8dOpXfDwAAAAAAAAA4P8DWi8zaIlUjAAAAAAAAAMAHfUEihr9F+bOHFAAAAAAAAABg32cJHQHwO31ujT4B4M/cHVAjd4A7wB3gDnAHuAP2Blio/Edr1/sVlehx8DT8+wLUewAAAAAAAMBJAH6mbvd6IWrqlsrXWVp+SgQAAAAAAAAAOBAgGg/z3eEfr7EGMA4+RAAAAAAAAACA/QHKvTmA8c/xkGWhNcRbNIdVorllCAAAAAAAAABwDECuRC2ECUDUAsjDAwAAAAAAAAD2A8gHWVqGngVoIeYmS1AEAAAAAAAAACin/MXJISqNWohLqAAAAAAAAACAawL0PoRhSAEAAAAAAAAA/nW6BygMUT9Auzw8AAAAAAAAAOA4gNu9jkWocY3p9eY+exweAAAAAAAAALAnQvvwrwTICxAAAAAAAAAA4GQA0aYAUR4eAAAAAAAAAHB1gPZCNTcwAAAAAAAAAOB4hFtUZqozAQAAAAAAAACuD7B2+BoNDy0jZMjp8AAAAAAAAACA6KTLUFkoDd0MAAAAAAAAAHBNgE2+KBHlxQkAAAAAAAAAEACXWob6EfLwwz0AAAAAAAAAQPQBy1AeHgAAAAAAAAAQACesRlssQ3nwsXIPAAAAAAAAABCdGCIANh0eAAAAAAAAABAAJ69GPYOPwwMAAAAAAAAALggQ1VTP0Hl4AAAAAAAAAEAAXLC6UmPoyfAAAAAAAAAAgGvXWnwAAAAAAAAAAA2AN0MoEQAAAAAAAADgcwB6vkABAAAAAAAAALg+QPlGI1hGqDMBAAAAAAAAAM4x4NphuwCi+PtTAQAAAAAAAABeW20Vww6pXoASTRHarwMAAAAAAAAAtmtpwNbCkwC6lqBcjZpftIwAAAAAAAAAAK96UNIUoUS9ANPh2gtSCwEAAAAAAAAA0F/r8A2ABkJj+F6ACAAAAAAAAADw+ocmP/PvHl+v02K49mcAAAAAAAAAAJ4C+AsvM/JY5SRAqAAAAABJRU5ErkJggg==",
-            faceAnn: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAAGVsnJAAAAG1BMVEVHcEz/+OvW1tbBwcHjaVbrVktycnJaWlonJzb+UtStAAAAAXRSTlMAQObYZgAABHFJREFUeNrt3dFt2zAUQNGs0BW4glboCl0hKyQbhGNXKF4AghBllpBlMTr3r3Bt652P9kGW5TdJkiRJkiRJkiRJkqQjy/8ZAAAAAAAAAGD+crTs9LG2VOUiAAAAAAAAAMDPGDwVfRSVj29BAAAAAAAAAADmaG/wevi0tvV4azECAAAAAAAAAMyz/KSoMXxXWxAAAAAAAAAAgMsO3x48SgN9v26OAAAAAAAAAABzDZ8GqwFzBAAAAAAAAAB4bWcOX54gyREAAAAAAAAA4PVLUGp02PBVJQIAAAAAAAAAYN4laOS5SwQAAAAAAAAAmHf4oQWqBIgAAAAAAAAAAOd13ImQcbwlAgAAAAAAAAC86gOR8eGPwCuXIQAAAAAAAADAPZagGgEAAAAAAAAAcE5nLEEAAAAAAAAAgBsBxHMBAAAAAAAAANcHOOHiyCEEAAAAAAAAAMDrANIaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODnASzRx9oSdRxwUfX8CAAAAAAAAABwXYDdAaL28G2AOgAAAAAAAADAPCdElqq94XtPiOQIAAAAAAAAAHCvD0by2p8or21hAgAAAAAAAADOvZfQmQC/o/J9cwQAAAAAAAAAOBtgv2cg1MMP/PjyxABfdwcIgfsCfOabA+TPr1sDfGX/BnQB+G/wTIBf0XtRHFA3Qi9ia/lJEQAAAAAAAADgGgDvaz0AI69R/rjDEgEAAAAAAAAAzgdIa+XBl5Vfqkg7NQGivZMiW8sQAAAAAAAAAOBcgC2EFO0jtJ+/B1APDwAAAAAAAAA4DyBHrSFS1APQhRi1viwBAAAAAAAAAEiX/OLkEqVGvYgtVAAAAAAAAADAnACjN2FYigAAAAAAAAAA/7rcDRSWaBygv7wGAAAAAAAAADgT4PxFaFkr37teggAAAAAAAAAAr0FofaDRDRCv0QtQL0AAAAAAAAAAgIsBRIcCROXwAAAAAAAAAIB5AXoXqq2BAQAAAAAAAACvR2h+4bERAAAAAAAAAGB+gK6Dr0qNash6eAAAAAAAAABAdNFlKDXKUeoIAAAAAAAAADAnwCEXSkRLlNcAAAAAAAAAAAEw1TI0jlAOv6wBAAAAAAAAAKIbLEPl8AAAAAAAAACAALhgOTpiGcpRfVEFAAAAAAAAACC6MEQAHDo8AAAAAAAAACC/zVCORgb/Hh4AAAAAAAAAMCFAlItGhi6HBwAAAAAAAAAEwITlnR4NXQ8PAAAAAAAAAJi7R4sPAAAAAAAAAGAAYGKEFAEAAAAAAAAA7gMwcgEFAAAAAAAAAGDuRi6krG+wnDcCAAAAAAAAAFxjwL2DHQKI4s9dAQAAAAAAAACeW+6o/uHFUYDWSZKexwEAAAAAAAAAx9Ua8NHCUwAMLUFbQz680DICAAAAAAAAADzvRkk1QopaAOPDtxekRwgAAAAAAAAAgOdd3FADDCC0hh8HiAAAAAAAAAAAz79pcs/fqx9v3Wip5z0AAAAAAAAAAF0AfwEFVd8m/uBjBQAAAABJRU5ErkJggg==",
-            faceCarolineA1: "data:image/png;base64,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",
-            faceCarolineA2: "data:image/png;base64,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",
-            faceCarolineA3: "data:image/png;base64,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",
-            faceCarolineB: "data:image/png;base64,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",
-        }
-    </script>
-
-    <!-- 나레이션 정보 -->
-    <script>
-        const narrations = [
-            {
-                title: "01. 프롤로그",
-                dialogue: [
-                    { image: "", name: "", text: "긴 복도를 달리고 있었다." },
-                    { image: "", name: "", text: "숨이 턱끝까지 차올랐지만 개의치 않는다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "그들이 나와 캐롤린을 쫓고 있다." },
-                    { image: "", name: "", text: "들키는 순간 끝장이다. 캐롤린과 다시는 만나지 못할 것이며, 캐롤린이 누구였는지도 기억하지 못할 정도로 망가질 것이다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "그렇게 친했던 앤과 메리도 이제는 우리를 기억하기는커녕 관심조차 없다. 앤의 몸에 메리의 머리를 이식한 지난 실험 탓에 이제 앤과 메리의 두 머리는 매일같이 하나의 몸의 통제권을 갖기 위해 싸우는 데에만 전념하고 있다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "인공 폐가 찌를 듯이 아파온다. 구석에서 붉은 빛이 번뜩였다. 반사적으로 몸을 피했지만 어깨를 뜨겁게 스치는 고통이 느껴진다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "어두운 실험실 구석으로 몸을 피했다." },
-                    { image: "", name: "", text: "캐롤린은 안전한 곳으로 피했을까." },
-                    { image: "", name: "", text: "의식이 멀어져간다." },
-                ]
-            },
-            {
-                title: "02. 게임 시작 직후 나레이션",
-                dialogue: [
-                    { image: "", name: "", text: "정신이 들고 나서 살펴보니 상처는 생각보다 별 것 아니었다. 경비로봇의 공격이 스친 어깨 부분의 옷과 인공 피부가 조금 찢어졌지만 팔을 움직이는 데에는 문제가 없다." },
-                    { image: "", name: "", text: "이곳이 어디인 줄도 모르고 급하게 뛰어들어온 것 같다." },
-                    { image: "", name: "", text: "여기는…" },
-                ]
-            },
-            {
-                title: "03. 지하 1층으로 이동 직후 첼과 캐롤린의 대화",
-                dialogue: [
-                    { image: "", name: "첼", text: "캐롤린, 피부가 다 찢어졌어. 너덜너덜하잖아. 괜찮아?" },
-                    { image: images.faceCarolineA1, name:"캐롤린", text: "큰 상처는 아냐, 괜찮아. 아, 그런데 손가락을 하나 잃어버렸어. 간당간당하더니 떨어졌나 봐." },
-                    { image: "", name: "첼", text: "그걸 큰 상처라고 하는 거야!" },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "깜짝이야. 쉿, 첼." },
-                    { image: "", name: "첼", text: "미안." },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "걱정해 줘서 고마워. 하긴, 이런 팔을 하고 바깥으로 나가면 우리가 인간이 아니라는 걸 금방 들키겠지?" },
-                    { image: "", name: "첼", text: "분명 어딘가에 남는 팔이 있을 거야. 없으면 자아 잃은 멍청한 놈들 팔이라도 떼 오지 뭐." },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "첼. 그런 식으로 말하는 건 좋지 않아. 앤과 메리가 아니었으면 분명 우리가…" },
-                    { image: "", name: "첼", text: "……." },
-                    { image: "", name: "첼", text: "미안해." },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "사과만 하게 만드는 것 같네. 나야말로 미안해. 그렇게 말하는 게 아니었는데. 앤이라면 분명 웃으면서 자기 팔도, 다리도 기꺼이 떼어줄 거야." },
-                    { image: "", name: "첼", text: "응…" },
-                ]
-            },
-            {
-                title: "04. 폐기물보관실의 대화",
-                dialogue: [
-                    { image: images.faceAnn, name: "앤", text: "폐기 시간이 됐나 봐, 메리. …어라, 첼이잖아…" },
-                    { image: images.faceMary, name: "메리", text: "정말이네, 캐롤린도 있어. 어떻게 여기에 있는 거야." },
-                    { image: "", name: "첼", text: "(캐롤린은 입을 벌리고 멍하니 그들을 바라보았다. 커다란 상자에 쓰레기처럼 담겨 폐기되기를 기다리는 앤과 메리의 모습을 보고 충격받은 듯하다. 그들은 그런 캐롤린을 보며 희미하게 웃었다.)" },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "앤, 메리… 미-미안해, 난…" },
-                    { image: images.faceAnn, name: "앤", text: "그렇구나. 괜찮아. 여기를 나가려는 거지? " },
-                    { image: images.faceMary, name: "메리", text: "마지막으로 너희를 보게 되어서 기뻐. 정말로." },
-                    { image: "", name: "첼", text: "(캐롤린은 벅찬 감정에 입을 막으려 했던 것 같지만 그의 오른팔이 더 이상의 부하를 견디지 못하고 둔탁한 소리를 내며 바닥에 떨어지고 말았다.)" },
-                    { image: images.faceAnn, name: "앤", text: "지금까지 정말 많이 힘들었겠구나. …캐롤린, 우리 팔을 가져가. 다리는 부러졌지만 팔은 멀쩡하니까 아직 쓸 수 있어." },
-                    { image: images.faceMary, name: "메리", text: "그만 울고, 응? 우린 어차피 조금 있으면 폐기될 거야. 옆 방 기계에 들어가서 다시는 나오지 못하는 거지. 그러니까 마지막으로 너희들에게 도움이 되고 싶어. 정말로. 부탁이야. 첼, 팔을 떼어줘." },
-                    { image: "", name: "첼", text: "(울음을 삼키는 캐롤린을 뒤로 하고 그들의 팔을 떼어 챙겼다.) 고마워. 미안해." },
-                    { image: "", name: "앤과 메리", text: "우리야말로 고마워. 부디 너희는 무사히 나갈 수 있길 바라. 이제 그만 가! 당직 연구원이 올 수도 있어." },
-                    { image: images.faceCarolineA1, name: "캐롤린", text: "……." },
-                    { image: "", name: "첼", text: "가자, 캐롤린. " },
-                ]
-            },
-            {
-                title: "05. 습격",
-                dialogue: [
-                    { image: "", name: "", text: "폐기물보관실을 뒤로 하고 문을 여는 순간, 불길한 붉은 불빛이 빛난다." },
-                    { image: "", name: "", text: "뭐라 말하기도 전에 캐롤린이 나를 밀쳤다." },
-                    { image: "", name: "", text: "둔탁한 소리가 들리고, 무슨 일이 벌어진 것인지 채 이해하기도 전에 캐롤린이 내 손을 붙들고 옆 방으로 들어가 문을 닫았다." },
-                    { image: "", name: "", text: "캐롤린의 신음소리와 내가 숨을 헐떡이는 소리만이 들린다." },
-                    { image: "", name: "", text: "벽을 더듬어 불을 켜자 이내 이곳이 폐기물보관실 옆 폐기처리실임을 깨닫는다." },
-                    { image: "", name: "", text: "옆을 돌아보자 배를 감싸쥔 캐롤린이 머리에서 피를 흘리며 창백한 얼굴로 스르르 주저앉았다.." },
-                    { image: "", name: "첼", text: "캐롤린! 캐롤린!" },
-                    { image: images.faceCarolineA2, name: "캐롤린", text: "아, 아파, 첼… 너는 괜찮지? 안 다쳤지? 미안해, 내가 또 네 발목을 잡네…" },
-                    { image: "", name: "첼", text: "캐롤린! 헛소리 하지 마!" },
-                    { image: "", name: "", text: "나는 감정을 애써 억누르고 캐롤린의 몸을 살폈다. 불길한 붉은 불빛은 경비로봇이었을 것이다. 그 공격에 캐롤린의 인공 내장과 머리가 크게 손상됐다. 쌔액거리는 힘겨운 숨소리를 듣자 캐롤린의 인공 뇌에 산소를 보낼 수 있기까지 남은 시간이 얼마 없다는 것을 직감했다." },
-                    { image: "", name: "", text: "침착하자. 여기는 폐기처리실이다. 어쩌면 아직 폐기되지 않은 남은 부품이 있을지도 모른다." },
-                ]
-            },
-            {
-                title: "06. 캐롤린(1)",
-                dialogue: [
-                    { image: "", name: "", text: "내가 이 연구소에서 ‘첼’이라는 이름을 부여받은 인격으로 눈을 떴을 때, 캐롤린은 이미 내 곁에 있었다." },
-                    { image: "", name: "", text: "인간으로의 섬세한 감정과 지식을 알려준 것이 캐롤린이었다." },
-                    { image: "", name: "", text: "친구들이 하나 둘씩 잔혹하게 사라져가는 이 연구소에서 가족과도 같은 친구들을 두고 탈출할 고민을 할 때 등을 밀어준 것도 그였다." },
-                    { image: "", name: "", text: "그는 줄곧 나의 가장 소중한 친구이자 언니이자 어머니였다." },
-                    { image: "", name: "", text: "그를 버린다는 것은 곧 내 일부를 버리는 것이나 다름없다." },
-                    { image: "", name: "", text: "나는 캐롤린의 안정된 숨소리에 귀를 기울이며 눈을 감았다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "..." },
-                    { image: images.faceCarolineA2, name: "캐롤린", text: "첼? …첼?" },
-                    { image: "", name: "첼", text: "(캐롤린이 조심스럽게 내 어깨를 흔들어 깨웠다. 그는 이제 한결 편해 보인다. 머리에서 흐르는 피는 멎었지만, 때때로 초점이 맞지 않는다. 말을 하다가도 도중에 멈추고 멍하니 있다. 그런 자신을 깨닫지 못하는 것 같다…)" },
-                ]
-            },
-            {
-                title: "07. 캐롤린(2)",
-                dialogue: [
-                    { image: "", name: "", text: "캐롤린이 눈을 떴다. 조심스럽게 얼굴로 손을 가져가 자신의-이제 자신의 것이 된-얼굴을 어색하게 매만졌다." },
-                    { image: images.faceCarolineA3, name: "캐롤린", text: "엄청나게 미안한 얼굴 하고 있네, 첼. 또 너에게 미안하다는 말을 하게 만들었구나." },
-                    { image: "", name: "첼", text: "미안해… 너와 함께 나가려면 이 방법밖에 없었어." },
-                    { image: images.faceCarolineA3, name: "캐롤린", text: "괜찮아. 그렇다고 ‘내’가 다른 사람이 된 건 아니니까. 기억은 하나도 손상되지 않았어. 난 괜찮아." },
-                    { image: "", name: "첼", text: "……." },
-                    { image: images.faceCarolineA3, name: "캐롤린", text: "괜찮아, 거의 다 왔어. 조금만 더 힘내자. 응?" },
-                    { image: "", name: "첼", text: "고마워…" },
-                ]
-            },
-            {
-                title: "08. 추격자",
-                dialogue: [
-                    { image: "", name: "", text: "드디어 끝이 가까워졌다고 생각했는데, 두꺼운 벽 너머로 사이렌 소리와 함께 둔탁한 소리가 들린다." },
-                    { image: "", name: "", text: "이 숨겨진 탈출구에 들어올 때 이미 경비로봇에게 들킨 모양이다." },
-                    { image: "", name: "", text: "시간이 없다." },
-                    { image: "", name: "", text: "나가야 한다." },
-                ]
-            },
-            {
-                title: "09. 두 사람의 캐롤린",
-                dialogue: [
-                    { image: "", name: "", text: "나는 번뜩 떠올렸다. 내게는 아직 캐롤린의 원본 부품이 있다. 손상된 머리 탓에 제대로 기능할지는 모르겠지만, 잠깐동안 문을 열고 있는 것 정도는 맡길 수 있을 것이다…" },
-                    { image: "", name: "", text: "나는 캐롤린의 원본 부품들을 빠르게 조합했다." },
-                    { image: "", name: "캐롤린", text: "첼…?" },
-                    { image: "", name: "", text: "새로운 캐롤린이 내 눈 앞에 섰다. 아니, 낡은 캐롤린인가? 그건 아무래도 좋다. 그들이 들이닥치기 전에 우리는 밖으로 나가야만 한다." },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "캐롤린의 손을 붙잡고 문 앞으로 가려 하자 내가 만들어낸 ‘원본 부품의 캐롤린’이 입을 열었다." },
-                    { image: images.faceCarolineB, name: "캐롤린", text: "나-나는 나갈 수 없는 거야, 첼? 나는… 네 가족이잖아." },
-                    { image: "", name: "", text: "..." },
-                    { image: images.faceCarolineA3, name: "A", text: "무슨 소리야, ‘내’가 캐롤린이야, 첼!" },
-                    { image: "", name: "", text: "나는 망연해졌다." },
-                    { image: images.faceCarolineA3, name: "A", text: "나야말로 진짜 캐롤린이야. 고작 모습이 바뀌었다고 해서 내가 캐롤린이 아니게 되는 건 아니잖아?" },
-                    { image: "", name: "", text: "캐롤린이 떨리는 목소리로 말했다." },
-                    { image: images.faceCarolineB, name: "B", text: "첼, 네가 이 연구소에서 태-태어나서, ‘첼’이 되었을 때부터, 줄곧 나는 이, 이 몸으로 너와 함께했었잖아. 내-내 진짜 얼굴 기억하고 있잖아, 그렇지?" },
-                    { image: images.faceCarolineA3, name: "A", text: "첼은 진짜 캐롤린인 ‘나’를 위해서 부품을 교체해 준 것뿐이야!" },
-                    { image: images.faceCarolineB, name: "B", text: "난 캐롤린의 모든 원본 부품으로 마-만들어졌지만 너는 달라. 너는 기억만이 캐롤린의 것이야. 네 몸도 얼굴도 캐롤린이 아니잖아. 난 부품도, 기억도, 전부 캐-캐롤린이야. 지금은 조-조금 고장났을 뿐이야. 완벽하게 고치게 되면 나야말로 첼이 기억하고 있는 캐롤린인걸." },
-                    { image: images.faceCarolineA3, name: "A", text: "첼!" },
-                    { image: "", name: "", text: "..." },
-                    { image: "", name: "", text: "두 캐롤린은 문 앞에 서서 나를 바라보고 있다." },
-                    { image: "", name: "", text: "통로 너머로 추격자가 다가오는 소리가 들린다." },
-                ]
-            }
+        const dialogue = [
+            { text: "긴 복도를 달리고 있었다." },
+            { text: "숨이 턱끝까지 차올랐지만 개의치 않는다." },
+            { text: "..." },
+            { text: "그들이 나와 캐롤린을 쫓고 있다." },
+            { text: "들키는 순간 끝장이다.\n캐롤린과 다시는 만나지 못할 것이며, 캐롤린이 누구였는지도 기억하지 못할 정도로 망가질 것이다." },
+            { text: "..."}, 
+            { text: "그렇게 친했던 앤과 메리도 이제는 우리를 기억하기는커녕 관심조차 없다.\n앤의 몸에 메리의 머리를 이식한 지난 실험 탓에 이제 앤과 메리의 두 머리는\n매일같이 하나의 몸의 통제권을 갖기 위해 싸우는 데에만 전념하고 있다." },
+            { text: "..." },
+            { text: "인공 폐가 찌를 듯이 아파온다.\n구석에서 붉은 빛이 번뜩였다.\n반사적으로 몸을 피했지만 어깨를 뜨겁게 스치는 고통이 느껴진다." },
+            { text: "..." },
+            { text: "어두운 실험실 구석으로 몸을 피했다." },
+            { text: "캐롤린은 안전한 곳으로 피했을까." },
+            { text: "의식이 멀어져간다." },
         ]
     </script>
 
@@ -293,53 +111,55 @@
 			window.parent.postMessage( { type: "close" }, "*" );
 		}
 
-        let currentNarrationIndex = 0;
+        // let currentNarrationIndex = 0;
         let currentDialogueIndex = 0;
+        let index = 0;
+        let text = "";
         const contentElement = document.getElementById('content');
-        const narrNameElement = document.getElementById('narr-name');
-        const narrTextElement = document.getElementById('narr-text');
         const buttonElement = document.getElementById('button');
-        
-		window.addEventListener("message", function (e) {
-            const narrationIndex = parseInt(e.data.narration, 10) - 1;
-            if (narrationIndex >= 0 && narrationIndex < narrations.length) {
-                currentNarrationIndex = narrationIndex;
-                currentDialogueIndex = 0;
-                updateNarration();
-            }
-		});
+        updateNarration();
 
         function updateDialogue() {
+            if (index < text.length) {
+                setText();
+                return;
+            }
+
             currentDialogueIndex++;
-            if (currentDialogueIndex < narrations[currentNarrationIndex].dialogue.length) {
+            if (currentDialogueIndex < dialogue.length + 1) {
                 updateNarration();
             } else {
                 closeWidget();
             }
         };
-        
-        function updateNarration() {
-            const narration = narrations[currentNarrationIndex];
-            const dialogue = narration.dialogue;
 
-            const currentDialogue = dialogue[currentDialogueIndex];
-            updateContentImage(currentDialogue.image);
-            narrNameElement.textContent = currentDialogue.name;
-            narrTextElement.textContent = currentDialogue.text;
-
+        function updateNarration() {            
+            text = dialogue[currentDialogueIndex].text;
+            contentElement.textContent = "";
+            index = 0;
+            showText();
             if (currentDialogueIndex < dialogue.length - 1) {
                 buttonElement.textContent = '다음';
             } else {
                 buttonElement.textContent = '종료';
-            }      
+            }
         }
 
-        function updateContentImage(imagePath) {
-            if (imagePath) {
-                contentElement.innerHTML = `<img src="${imagePath}" alt="나레이션">`;
-            } else {
-                contentElement.innerHTML = '';
+        function showText() {
+            if(index < text.length) {
+                if (text[index] === '\n') {
+                    contentElement.innerHTML += '<br>';
+                } else {
+                    contentElement.innerHTML += text[index];
+                }
+                index++;
+                setTimeout(showText, 50);
             }
+        }
+
+        function setText() {
+            index = text.length;
+            contentElement.innerHTML = text.replace(/\n/g, '<br>');
         }
     </script>
 </body>
