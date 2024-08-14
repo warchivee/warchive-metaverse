@@ -36,6 +36,9 @@ let armFixedCarolineWalk = ScriptApp.loadSpritesheet('armFixedCaroline.png', 48,
   right: [9,10,11,12]
 });
 
+let card = ScriptApp.loadSpritesheet('card.png');
+let newBody = ScriptApp.loadSpritesheet('body.png', 120, 130);
+
 let securityGuard = [
   ScriptApp.loadSpritesheet("bot1.png"),
   ScriptApp.loadSpritesheet("bot2.png"),
@@ -68,7 +71,7 @@ const regions: Region[] = [
   { name: "서류보관실", topLeftX: 98, topLeftY: 78, bottomRightX: 118, bottomRightY: 88 },
   { name: "폐기물보관실", topLeftX: 95, topLeftY: 104, bottomRightX: 112, bottomRightY: 115 },
   { name: "부품창고", topLeftX: 95, topLeftY: 139, bottomRightX: 109, bottomRightY: 145 },
-  { name: "휴게실", topLeftX: 13, topLeftY: 163, bottomRightX: 33, bottomRightY: 174 },
+  { name: "직원 휴게실", topLeftX: 13, topLeftY: 163, bottomRightX: 33, bottomRightY: 174 },
   { name: "폐기처리실", topLeftX: 79, topLeftY: 194, bottomRightX: 97, bottomRightY: 201 },
 ];
 
@@ -84,7 +87,7 @@ interface Area {
 const areas: Area[] = [
   { name: "서류 앞", type: 1, topLeftX: 99, topLeftY: 80, bottomRightX: 99, bottomRightY: 80 },
   { name: "상자 앞", type: 2, topLeftX: 100, topLeftY: 106, bottomRightX: 102, bottomRightY: 107 },
-  { name: "보안카드 앞", type: 3, topLeftX: 21, topLeftY: 165, bottomRightX: 22, bottomRightY: 168 },
+  { name: "보안카드 앞", type: 3, topLeftX: 20, topLeftY: 165, bottomRightX: 26, bottomRightY: 171 },
   { name: "누군가의 몸뚱이 앞", type: 4, topLeftX: 90, topLeftY: 196, bottomRightX: 90, bottomRightY: 196 },
   { name: "계단 앞", type: 5, topLeftX: 121, topLeftY: 44, bottomRightX: 129, bottomRightY: 49 },
   { name: "폐기물보관실 문 앞", type: 6, topLeftX: 110, topLeftY: 112, bottomRightX: 111, bottomRightY: 113 },
@@ -155,13 +158,7 @@ function showNarration(player, narrationNumber:string) {
 function getNewArm(player) {
   //@ts-ignore
   player.showAlert("", function () {
-    //@ts-ignore
-     player.showAlert("", function() {
-      //한쌍 넣은 후
-      player.tag.hasNewArm = true;
-    }, {
-      content: "인벤토리에 '팔 한 쌍'을 넣었다."
-    })
+    player.tag.hasNewArm = true;
   }, {
     content: "아이템 '팔 한 쌍'을 얻었다.",
     confirmText: "다음"
@@ -176,8 +173,6 @@ function changeBody(player) {
       player.showAlert("", function () {
         //@ts-ignore
         player.showAlert("", function () {
-          //@ts-ignore
-          player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
               showNarration(player, "6");
@@ -186,10 +181,6 @@ function changeBody(player) {
             }, {
               content: "아이템 ‘캐롤린의 원본 몸통’을 얻었다."
             })
-          }, {
-            content: "인벤토리에 아이템 ‘캐롤린의 원본 몸통’을 넣었다.",
-            confirmText: "다음"
-          });
         }, {
           content: "캐롤린은 정신을 잃었다.",
           confirmText: "다음"
@@ -225,6 +216,11 @@ ScriptApp.onInit.Add(function () {
         overlap: true,
     });
   }
+
+  //@ts-ignore
+  ScriptMap.putObjectWithKey(21, 166, card, { key: "card", offsetX: -10, offsetY: -31, type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS });
+  //@ts-ignore
+  ScriptMap.putObjectWithKey(88, 195, newBody, { key: "body", offsetX: 19, offsetY: -8, type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS });
 });
 
 // 해당하는 모든 플레이어가 이 이벤트를 통해 App에 입장
@@ -263,6 +259,16 @@ ScriptApp.onObjectTouched.Add(function (sender, x, y, tileID, obj) {
                     </span>`;
 
       sender.showCustomLabel(htmlStr, 0xffffff, 0xf51400, 200, 60, 0.5);
+      if(sender.tag.hasCard) {
+        //@ts-ignore
+        ScriptMap.putObjectWithKey(21, 166, card, { key: "card", offsetX: -10, offsetY: -31, type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS });
+      }
+
+      if(sender.tag.hasNewBody) {
+        //@ts-ignore
+        ScriptMap.putObjectWithKey(88, 195, newBody, { key: "body", offsetX: 19, offsetY: -8, type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS });
+      }
+      
       initTag(sender);
       sender.setEffectSprite(armbrokeCaroline, 35, 0, 0);
       sender.spawnAt(114, 38, 2);
@@ -344,12 +350,8 @@ ScriptApp.addOnKeyDown(70, function (player) {
         if(!player.tag.hasCard) {
           //@ts-ignore
           player.showAlert("", function() {
-            //@ts-ignore
-            player.showAlert("", function() {
-              player.tag.hasCard = true;
-            }, {
-              content: "인벤토리에 ‘지하 1층 보안카드’를 넣었다.",
-            })
+            player.tag.hasCard = true;
+            player.disappearObject("card");
           }, {
             content: "아이템 ‘지하 1층 보안카드’를 얻었다.",
             confirmText: "다음"
@@ -363,16 +365,12 @@ ScriptApp.addOnKeyDown(70, function (player) {
           player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
-              //@ts-ignore
-              player.showAlert("", function() {
-                player.tag.hasNewBody = true;
-                player.sendUpdated();
-                if(player.tag.hasNewBody) {
-                  changeBody(player);
-                }
-              }, {
-                content: "인벤토리에 ‘누군가의 몸뚱이’를 넣었다."
-              })
+              player.disappearObject("body")
+              player.tag.hasNewBody = true;
+              player.sendUpdated();
+              if(player.tag.hasNewBody) {
+                changeBody(player);
+              }
             }, {
               content: "아이템 ‘누군가의 몸뚱이’를 얻었다.",
               confirmText: "다음"
@@ -424,20 +422,13 @@ ScriptApp.addOnKeyDown(70, function (player) {
               //@ts-ignore
               player.showAlert("", function () {
                 //@ts-ignore
-               player.showAlert("", function () {
-                //@ts-ignore
                 player.showAlert("", function() {
-                  // player.disappearObject(key);
                   player.setEffectSprite(armFixedCaroline, 35, 0, 0);
                   player.tag.hasOldArm = true;
                   player.sendUpdated();
                 }, {
                   content: "아이템 ‘캐롤린의 원본 팔 한 쌍’을 얻었다."
                 })
-              }, {
-                content: "인벤토리에 아이템 ‘캐롤린의 원본 팔 한 쌍’을 넣었다.",
-                confirmText: "다음"
-              });
               }, {
                 content: "캐롤린: 미안해…",
                 confirmText: "다음"
