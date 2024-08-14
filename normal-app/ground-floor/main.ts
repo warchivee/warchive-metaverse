@@ -59,21 +59,21 @@ let chell = ScriptApp.loadSpritesheet("0.png", 48, 64, {
 });
 
 let securityGuardXY = [
-    [140, 29],
-    [133, 33],
+    [141, 29],
+    [132, 33],
     [130, 36],
-    [118, 30],
-    [124, 31],
-    [126, 26],
+    // [118, 30],
+    [124, 29],
+    // [126, 26],
     [118, 36],
     [133, 25],
-    [149, 33],
+    [147, 34],
     [124, 37]
 ];
 
 let transparentObjectXY = [
-    [24, 88],
-    [24, 97]
+    [20, 86],
+    [20, 99]
 ];
 
 interface Region {
@@ -228,16 +228,9 @@ ScriptApp.addOnKeyDown(70, function(player) {
                     player.showAlert("", function () {
                         //@ts-ignore
                         player.showAlert("", function () {
-                            //@ts-ignore
-                            player.showAlert("", function () {
-                            },
-                            {
-                                content: "인벤토리에 ‘누군가의 머리’를 넣었다.",
-                            });
                         },
                         {
                             content: "아이템 ‘누군가의 머리’를 얻었다.",
-                            confirmText: "다음",
                         });
                     },
                 {
@@ -304,28 +297,21 @@ ScriptApp.addOnKeyDown(70, function(player) {
                             player.showAlert("", function () {
                                 //@ts-ignore
                                 player.showAlert("", function () {
-                                    //@ts-ignore
-                                    player.showAlert("", function () {
-                                        // @ts-ignore
-                                        player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
-                                        player.tag.widget.onMessage.Add(function (player, data) {
-                                            if (data.type == "close") {
-                                                player.tag.widget.destroy();
-                                                player.tag.widget = null;
-                                            }
-                                        });
-                                        player.tag.widget.sendMessage({
-                                            narration: "7", // 솜님 기획서에 있는 나레이션 번호
-                                        })
-                                            player.sendUpdated();
-                                    },
-                                    {
-                                        content:"인벤토리에 ‘캐롤린의 원본 머리’를 넣었다."
+                                    // @ts-ignore
+                                    player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
+                                    player.tag.widget.onMessage.Add(function (player, data) {
+                                        if (data.type == "close") {
+                                            player.tag.widget.destroy();
+                                            player.tag.widget = null;
+                                        }
                                     });
+                                    player.tag.widget.sendMessage({
+                                        narration: "7", // 솜님 기획서에 있는 나레이션 번호
+                                    })
+                                        player.sendUpdated();
                                 },
                                 {
                                     content: "아이템 ‘캐롤린의 원본 머리’를 얻었다.",
-                                    confirmText: "다음",
                                 });
                             },
                             {
