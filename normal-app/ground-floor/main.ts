@@ -62,9 +62,7 @@ let securityGuardXY = [
     [141, 29],
     [132, 33],
     [130, 36],
-    // [118, 30],
     [124, 29],
-    // [126, 26],
     [118, 36],
     [133, 25],
     [147, 34],
@@ -86,7 +84,7 @@ interface Region {
 
   const regions: Region[] = [
     { name: '지상 1층', topLeftX: 111, topLeftY: 21, bottomRightX: 154, bottomRightY: 45 },
-    { name: '휴게실', topLeftX: 7, topLeftY: 85, bottomRightX: 33, bottomRightY: 99 },
+    { name: '직원 휴게실', topLeftX: 7, topLeftY: 85, bottomRightX: 33, bottomRightY: 99 },
     { name: '샘플실', topLeftX: 85, topLeftY: 132, bottomRightX: 108, bottomRightY: 145 },
   ];
   
