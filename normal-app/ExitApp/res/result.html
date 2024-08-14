@@ -73,6 +73,30 @@
         button:hover {
             background-color: #4a4a4a;
         }
+
+        .scroll-container {
+            width: 100%;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            position: relative;
+            animation: scrollUp 10s linear forwards;
+            color: white;
+            font-size: 20px;
+        }
+
+        @keyframes scrollUp {
+            from {
+                top: 80%;
+            }
+            to {
+                top: -80%;
+            }
+        }
 	</style>
 	<title>Narration</title>
 </head>
@@ -103,7 +127,9 @@
                 dialogue: [
                     { text: "나는 낡은 캐롤린과 함께 탈출하기로 결심했다." },
                     { text: "낡은  캐롤린의 손을 잡고 문을 열자 지금껏 맡아본 적 없는 신선한 공기가 느껴진다. " },
-                    { text: "뒤를 돌아보자 반쯤 닫혀가는 무거운 문 사이로 새 캐롤린이 보였다.\n새 캐롤린은 슬픈 표정으로 낡은 캐롤린을 바라보았다.\n그리고 닫혀가는 문 틈으로 나를 원망스럽게 쳐다보며 살인경비로봇들에게 파괴당했다." },
+                    { text: "뒤를 돌아보자 반쯤 닫혀가는 무거운 문 사이로 새 캐롤린이 보였다." },
+                    { text: "새 캐롤린은 슬픈 표정으로 낡은 캐롤린을 바라보았다." },
+                    { text: "그리고 닫혀가는 문 틈으로 나를 원망스럽게 쳐다보며 경비로봇들에게 파괴당했다." },
                 ]
             },
             {
@@ -123,7 +149,7 @@
                 title: "둘을 내보내고 내가 남는다",
                 dialogue: [
                     { text: "나는 두 캐롤린을 내보내고 내가 남기로 결정했다." },
-                    { text: "문을 열어주었지만 두 캐롤린은 나가지 않았다." },
+                    { text: "문을 열어주었지만 두 캐롤린은 고개를 저으며 나가지 않았다." },
                     { text: "두 캐롤린은 다가와 내 손을 잡았다." },
                     { text: "…" },
                     { text: "그리고,\n이내 쫓아온 경비로봇들에 의해 우리는 모두 파괴당했다." },
@@ -150,7 +176,7 @@
         let text = "";
         const contentElement = document.getElementById('content');
         const buttonElement = document.getElementById('button');
-
+        
         window.addEventListener("message", function (e) {
             currentNarrationIndex = e.data.choice - 1;
             updateNarration();
@@ -161,27 +187,30 @@
                 setText();
                 return;
             }
-
             currentDialogueIndex++;
-            if (currentDialogueIndex < narrations[currentNarrationIndex].dialogue.length + 1) {
-                updateNarration();
+            if (currentDialogueIndex < narrations[currentNarrationIndex].dialogue.length) {
+                buttonElement.textContent = '다음';
             } else {
-                closeWidget();
+                buttonElement.textContent = '종료';
             }
+            updateNarration();
         };
 
         function updateNarration() {
             const narration = narrations[currentNarrationIndex];
             const dialogue = [...narration.dialogue, ...narrations[4].dialogue];
-            
             text = dialogue[currentDialogueIndex].text;
             contentElement.textContent = "";
             index = 0;
-            showText();
+
             if (currentDialogueIndex < dialogue.length - 1) {
-                buttonElement.textContent = '다음';
+                showText();
             } else {
-                buttonElement.textContent = '종료';
+                buttonElement.style.display = 'none';
+                showText();
+                setTimeout(() => {
+                    startScrolling();
+                }, 2000); // 2 sec
             }
         }
 
@@ -200,6 +229,24 @@
         function setText() {
             index = text.length;
             contentElement.innerHTML = text.replace(/\n/g, '<br>');
+        }
+    
+        function startScrolling() {            
+            const containerElement = document.querySelector('.container');
+            containerElement.innerHTML = '';
+
+            const scrollContainer = document.createElement('div');
+            scrollContainer.className = 'scroll-container';
+            const scrollContent = document.createElement('div');
+            scrollContent.className = 'scroll-content';
+            scrollContent.innerHTML = "기획<br>팀 와카이브<br><br>개발<br>팀 와카이브<br><br>시나리오<br>팀 와카이브<br><br>캐릭터 디자인<br>팀 와카이브<br><br>음악<br>MusMus<br><br>플랫폼<br>zep<br><br><br><br><br>플레이 해주셔서 감사합니다.";
+
+            scrollContainer.appendChild(scrollContent);
+            containerElement.appendChild(scrollContainer);
+
+            setTimeout(() => {
+                closeWidget();
+            }, 10000); // 10 sec
         }
     </script>
 </body>
