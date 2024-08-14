@@ -34,14 +34,12 @@ let securityGuard = [
 ];
 
 let securityGuardXY = [
-  [33, 23],
-  [33, 29],
-  [38, 20],
-  [48, 26],
-  [38, 26],
-  [25, 33],
   [22, 25],
-  [45, 33]
+  [25, 33],
+  [36, 24],
+  [36, 30],
+  [48, 26],
+  [45, 33],
 ];
 
 interface Region {
@@ -242,27 +240,22 @@ ScriptApp.onTriggerObject.Add(function (player, layerID, x, y, key) {
         player.tag.hasCompanion = true;
         player.setEffectSprite(companion, 35, 0, 0);
         player.sendUpdated();
+      } else {
+        player.showNoteModal("부서진 캐롤린의 다리를 대체할 부품을 찾아야 한다.");
       }
     }
   }
 
   if(key === "leg") {
     if(player.tag.hasCompanion) {
-
       player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
       player.tag.widget.onMessage.Add(function (player, data) {
         if (data.type == "close") {
           player.tag.widget.destroy();
           player.tag.widget = null;
           //@ts-ignore
-          player.showAlert("", function () { 
-            //@ts-ignore
-            player.showAlert("", function () { }, {
-              content: "인벤토리에 아이템 ‘캐롤린의 원본 다리 한 쌍’을 넣었다.",
-            })
-          }, {
+          player.showAlert("", function () { }, {
             content: "아이템 ‘캐롤린의 원본 다리 한 쌍’을 얻었다.",
-            confirmText: "다음"
           })
         }
       });
@@ -325,14 +318,8 @@ ScriptApp.addOnKeyDown(70, function(player) {
           //@ts-ignore
           player.showAlert("", function () {
             //@ts-ignore
-            player.showAlert("", function () {
-              //@ts-ignore
-              player.showAlert("", function () { }, {
-                content: "인벤토리에 ‘긴 막대’를 넣었다.",
-              });
-            }, {
+            player.showAlert("", function () { }, {
               content: "아이템 ‘긴 막대’를 얻었다.",
-              confirmText: "다음"
             });
           }, {
             content: "기계 장치의 부속품 손잡이를 떼어내서 문을 부술 수 있을 것 같다.",
@@ -341,6 +328,8 @@ ScriptApp.addOnKeyDown(70, function(player) {
           
           player.disappearObject("stick");
           player.tag.hasStick = true;
+        } else {
+          player.showNoteModal("기계 장치의 일부가 망가진 것 같다...");
         }
         break;
 
@@ -357,14 +346,8 @@ ScriptApp.addOnKeyDown(70, function(player) {
           //@ts-ignore
           player.showAlert("", function () {
             //@ts-ignore
-            player.showAlert("", function () {
-              //@ts-ignore
-              player.showAlert("", function () { }, {
-                content: "인벤토리에 ‘지하 2층 보안카드’를 넣었다.",
-              });
-            }, {
+            player.showAlert("", function () { }, {
               content: "아이템 ‘지하 2층 보안카드’를 얻었다.",
-              confirmText: "다음"
             });
           }, {
             content: "캐비닛에서 보안카드를 찾았다.",
@@ -372,6 +355,8 @@ ScriptApp.addOnKeyDown(70, function(player) {
           });
 
           player.tag.hasCard = true;  
+        } else {
+          player.showNoteModal("캐비닛 안에 쓸만한 건 없어 보인다.");
         }
         break;
 
@@ -396,21 +381,16 @@ ScriptApp.addOnKeyDown(70, function(player) {
           //@ts-ignore
           player.showAlert("", function () {
             //@ts-ignore
-            player.showAlert("", function () {
-              //@ts-ignore
-              player.showAlert("", function () { }, {
-                content: "인벤토리에 ‘다리 한 쌍’을 넣었다.",
-              });
-            }, {
+            player.showAlert("", function () { }, {
               content: "아이템 ‘다리 한 쌍’을 얻었다.",
-              confirmText: "다음"
             });
           }, {
             content: "약간 낡고 더럽지만 쓸만한 다리 한 쌍을 찾았다. 캐롤린의 원래 다리와는 조금 다르지만 어쩔 수 없지.",
             confirmText: "다음"
           });
-          
-          player.tag.hasLeg = true;  
+          player.tag.hasLeg = true;
+        } else {
+          player.showNoteModal("비어있다.");
         }
         break;
 
@@ -420,7 +400,7 @@ ScriptApp.addOnKeyDown(70, function(player) {
             ScriptApp.spawnPlayer(player.id, 150, 10);
             return;  
           } else {
-            player.showNoteModal("캐롤린의 부서진 다리가 신경쓰인다...");
+            player.showNoteModal("캐롤린의 부서진 다리가 신경 쓰인다... 챙겨와야겠다.");
             return;
           }
         }
