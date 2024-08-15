@@ -355,6 +355,10 @@
             const narration = narrations[currentNarrationIndex];
             const dialogue = narration.dialogue;
 
+            if(dialogue[currentDialogueIndex] === void 0) {
+                closeWidget();
+            }
+
             const currentDialogue = dialogue[currentDialogueIndex];
             updateContentImage(currentDialogue.image);
             narrNameElement.textContent = currentDialogue.name;

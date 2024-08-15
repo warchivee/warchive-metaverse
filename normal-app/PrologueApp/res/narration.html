@@ -111,7 +111,6 @@
 			window.parent.postMessage( { type: "close" }, "*" );
 		}
 
-        // let currentNarrationIndex = 0;
         let currentDialogueIndex = 0;
         let index = 0;
         let text = "";
@@ -133,8 +132,13 @@
             }
         };
 
-        function updateNarration() {            
+        function updateNarration() {      
+            if(dialogue[currentDialogueIndex] === void 0) {
+                closeWidget();
+            }
+
             text = dialogue[currentDialogueIndex].text;
+
             contentElement.textContent = "";
             index = 0;
             showText();
