@@ -86,7 +86,7 @@
         .scroll-content {
             height: fit-content;
             position: relative;
-            animation: scrollUp 16s linear forwards;
+            animation: scrollUp 20s linear forwards;
             color: white;
             font-size: 20px;
         }
@@ -102,7 +102,7 @@
 
         @keyframes scrollUp {
             from {
-                top: 120%;
+                top: 100%;
             }
             to {
                 top: -120%;
@@ -169,7 +169,7 @@
             {
                 title: "공통",
                 dialogue: [
-                    { text: "캐롤린과 캐롤린\nGAME CLEAR" },
+                    { text: "캐롤린과 캐롤린\nTHE END" },
                 ]
             }
         ]
@@ -187,7 +187,7 @@
         let text = "";
         const contentElement = document.getElementById('content');
         const buttonElement = document.getElementById('button');
-        updateNarration(); //DEBUG
+        
         window.addEventListener("message", function (e) {
             currentNarrationIndex = e.data.choice - 1;
             updateNarration();
@@ -253,8 +253,6 @@
             const containerElement = document.querySelector('.container');
             containerElement.innerHTML = '';
 
-            // const boxElement = document.querySelector('.box');
-
             const scrollContainer = document.createElement('div');
             scrollContainer.className = 'scroll-container';
             const scrollContent = document.createElement('div');
@@ -266,7 +264,7 @@
 
             setTimeout(() => {
                 closeWidget();
-            }, 16000); // 16 sec
+            }, 20000); // 20 sec
         }
     </script>
 </body>
