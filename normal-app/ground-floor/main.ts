@@ -149,6 +149,8 @@ ScriptApp.onJoinPlayer.Add(function(player){
 
 ScriptApp.onStart.Add(function () {
     ScriptMap.putObjectWithKey(130, 18, plantPot, {
+        //@ts-ignore
+        type: ObjectEffectType.INTERACTION_WITH_ZEPSCRIPTS,
         key: "plant",
         overlap: true,
         //@ts-ignore

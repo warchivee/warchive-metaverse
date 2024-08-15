@@ -305,6 +305,7 @@
             {
                 title: "11. 지하 2층 분석실 - 상호작용(2): 다리를 교체하는 캐롤린",
                 dialogue: [
+                    { image: "", name: "", text: "나는 캐롤린의 부서진 다리를 실험소모품창고에서 발견한 다리 부품으로 교체했다."},
                     { image: "", name: "첼", text: "어때? 원래 다리와는 조금 다르지만..." },
                     { image: images.faceCarolineA1, name: "캐롤린", text: "아주 좋아. 정말 고마워, 첼. 이젠 내가 너보다 키가 커졌네?" },
                 ]
@@ -313,7 +314,7 @@
                 title: "12. 지하 2층 분석실 - 상호작용(3): 캐롤린의 부서진 다리",
                 dialogue: [
                     { image: "", name: "", text: "캐롤린의 부서진 다리를 들어올리자 캐롤린은 조금 놀란 듯 보인다." },
-                    { image: images.faceCarolineA1, name: "첼", text: "밖에 나가서 고칠 수 있을지도 모르잖아. 가져가자. 네 원래 다리인걸. 놔두고 가기 싫어." },
+                    { image: "", name: "첼", text: "밖에 나가서 고칠 수 있을지도 모르잖아. 가져가자. 네 원래 다리인걸. 놔두고 가기 싫어." },
                 ]
             }
         ]
@@ -353,6 +354,10 @@
         function updateNarration() {
             const narration = narrations[currentNarrationIndex];
             const dialogue = narration.dialogue;
+
+            if(dialogue[currentDialogueIndex] === void 0) {
+                closeWidget();
+            }
 
             const currentDialogue = dialogue[currentDialogueIndex];
             updateContentImage(currentDialogue.image);
