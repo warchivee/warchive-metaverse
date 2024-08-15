@@ -133,6 +133,7 @@ function initTag(player) {
     hasNewBody: false,
     hasOldBody: false,
     widget: null,
+    // widget2: null,
   };
 }
 
@@ -175,7 +176,13 @@ function changeBody(player) {
         player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
-              showNarration(player, "6");
+              player.tag.widget = player.showWidget("narrationOnlyText.html", "middle", 5000, 5000);
+              player.tag.widget.onMessage.Add(function (player, data) {
+                if (data.type == "close") {
+                  player.tag.widget.destroy();
+                  showNarration(player, "6"); 
+                }
+              })
               //@ts-ignore
               player.disappearObject("guard" + `${destroyGuard[1]}`);
             }, {
@@ -365,7 +372,7 @@ ScriptApp.addOnKeyDown(70, function (player) {
           player.showAlert("", function () {
             //@ts-ignore
             player.showAlert("", function() {
-              player.disappearObject("body")
+              player.disappearObject("body");
               player.tag.hasNewBody = true;
               player.sendUpdated();
               if(player.tag.hasNewBody) {
@@ -388,10 +395,14 @@ ScriptApp.addOnKeyDown(70, function (player) {
         }
 
         if(player.tag.hasCard) {
-          if(!player.tag.isOpenedStairs) {
-            player.tag.isOpenedStairs = true;
-            player.sendUpdated();
-            player.showNoteModal("‘지하 1층 보안카드’로 문을 열었다.");
+          if(!player.tag.hasNewArm || !player.tag.hasNewBody || !player.tag.hasOldArm || !player.tag.hasOldBody) {
+            player.showNoteModal("모든 미션을 끝내야 나갈 수 있습니다.");
+          } else {
+            if(!player.tag.isOpenedStairs) {
+              player.tag.isOpenedStairs = true;
+              player.sendUpdated();
+              player.showNoteModal("‘지하 1층 보안카드’로 문을 열었다.");
+            }
           }
         } else {
           player.showNoteModal("위층으로 올라가는 계단의 문은 잠겨 있다. 카드를 인식시킬 수 있는 보안 패드가 붙어 있다.");
