@@ -46,6 +46,7 @@
             color: white;
             font-size: 20px;
             text-align: center;
+            position: relative;
         }
         
         hr {
@@ -83,18 +84,28 @@
         }
         
         .scroll-content {
+            height: fit-content;
             position: relative;
-            animation: scrollUp 10s linear forwards;
+            animation: scrollUp 16s linear forwards;
             color: white;
             font-size: 20px;
         }
 
+        .fade-out {
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .hidden {
+            opacity: 0;
+        }
+
         @keyframes scrollUp {
             from {
-                top: 80%;
+                top: 120%;
             }
             to {
-                top: -80%;
+                top: -120%;
             }
         }
 	</style>
@@ -106,7 +117,7 @@
         <div class="box">
             <div id="content" class="content"></div>
             <hr />
-            <button id="button" onclick="updateDialogue()">다음</button>    
+            <button id="button" onclick="updateDialogue()">다음</button>
         </div>
     </div>
 
@@ -176,7 +187,7 @@
         let text = "";
         const contentElement = document.getElementById('content');
         const buttonElement = document.getElementById('button');
-        
+        updateNarration(); //DEBUG
         window.addEventListener("message", function (e) {
             currentNarrationIndex = e.data.choice - 1;
             updateNarration();
@@ -207,10 +218,17 @@
                 showText();
             } else {
                 buttonElement.style.display = 'none';
+                
                 showText();
                 setTimeout(() => {
+                    contentElement.classList.add('fade-out');
+                    contentElement.classList.add('hidden');
+                }, 1000); // 1sec
+
+                setTimeout(() => {
                     startScrolling();
-                }, 2000); // 2 sec
+                }, 3000); // 3 sec
+                
             }
         }
 
@@ -235,18 +253,20 @@
             const containerElement = document.querySelector('.container');
             containerElement.innerHTML = '';
 
+            // const boxElement = document.querySelector('.box');
+
             const scrollContainer = document.createElement('div');
             scrollContainer.className = 'scroll-container';
             const scrollContent = document.createElement('div');
             scrollContent.className = 'scroll-content';
-            scrollContent.innerHTML = "기획<br>팀 와카이브<br><br>개발<br>팀 와카이브<br><br>시나리오<br>팀 와카이브<br><br>캐릭터 디자인<br>팀 와카이브<br><br>음악<br>MusMus<br><br>플랫폼<br>zep<br><br><br><br><br>플레이 해주셔서 감사합니다.";
+            scrollContent.innerHTML = "기획<br><br>팀 와카이브<br><br><br><br>개발<br><br>팀 와카이브<br><br><br><br>시나리오<br><br>팀 와카이브<br><br><br><br>캐릭터 디자인<br><br>팀 와카이브<br><br><br><br>음악<br><br>MusMus<br><br><br><br>플랫폼<br><br>zep<br><br><br><br><br><br><br><br><br><br>플레이 해주셔서 감사합니다.";
 
             scrollContainer.appendChild(scrollContent);
             containerElement.appendChild(scrollContainer);
 
             setTimeout(() => {
                 closeWidget();
-            }, 10000); // 10 sec
+            }, 16000); // 16 sec
         }
     </script>
 </body>

@@ -55,19 +55,14 @@ ScriptApp.onJoinPlayer.Add(function(player) {
   player.sendUpdated();
   player.hidden = true;
 
-  player.tag.widget = player.showWidget("narration.html", "middle", 960, 620);
+  player.tag.widget = player.showWidget("narration2.html", "middle", 1500, 1500);
 	player.tag.widget.onMessage.Add(function (player, data) {
 		if (data.type == "close") {
 			player.tag.widget.destroy();
 			player.tag.widget = null;
-      
       player.showCenterLabel("탈출구");
 		}
 	});
-  player.tag.widget.sendMessage({
-    narration: "8",
-  });
-
 	player.sendUpdated();
 });
 
