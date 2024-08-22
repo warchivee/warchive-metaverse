@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+
+		::-webkit-scrollbar {
+			display: none;
+		}
+
+		body {
+			-ms-overflow-style: none;
+		}
+
+		.container {
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+            background-color: black;
+		}
+
+        .box {
+            width: 960px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            width: fit-content;
+            height: 100px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        hr {
+            border: 0;
+            height: 1px; 
+            background-color: white;
+            margin: 10px 0px;
+        }
+
+        button {
+            width: fit-content;
+            height: 40px;
+            border: none;
+            box-shadow: none;
+            color: white;
+            font-weight: bold;
+            background-color: #636363;
+            padding: 10px 80px;
+            border-radius: 7px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;  
+        }
+        
+        button:hover {
+            background-color: #4a4a4a;
+        }
+	</style>
+	<title>Narration</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <div id="content" class="content"></div>
+            <hr />
+            <button id="button" onclick="updateDialogue()">다음</button>    
+        </div>
+    </div>
+
+    <!-- 선택 결말 정보 -->
+    <script>
+        const dialogue = [
+            { text: "내가 이 연구소에서 ‘첼’이라는 이름을 부여받은 인격으로 눈을 떴을 때, 캐롤린은 이미 내 곁에 있었다." },
+            { text: "인간으로의 섬세한 감정과 지식을 알려준 것이 캐롤린이었다." },
+            { text: "친구들이 하나 둘씩 잔혹하게 사라져가는 이 연구소에서 가족과도 같은 친구들을 두고 탈출할 고민을 할 때 등을 밀어준 것도 그였다." },
+            { text: "그는 줄곧 나의 가장 소중한 친구이자 언니이자 어머니였다. "}, 
+            { text: "그를 버린다는 것은 곧 내 일부를 버리는 것이나 다름없다." },
+            { text: "나는 캐롤린의 안정된 숨소리에 귀를 기울이며 눈을 감았다." },
+        ]
+    </script>
+
+    <!-- Widget 관련 함수 -->
+	<script type="text/javascript">
+        function closeWidget() {
+			window.parent.postMessage( { type: "close" }, "*" );
+		}
+
+        // let currentNarrationIndex = 0;
+        let currentDialogueIndex = 0;
+        let index = 0;
+        let text = "";
+        const contentElement = document.getElementById('content');
+        const buttonElement = document.getElementById('button');
+        updateNarration();
+
+        function updateDialogue() {
+            if (index < text.length) {
+                setText();
+                return;
+            }
+
+            currentDialogueIndex++;
+            if (currentDialogueIndex < dialogue.length + 1) {
+                updateNarration();
+            } else {
+                closeWidget();
+            }
+        };
+
+        function updateNarration() {            
+            text = dialogue[currentDialogueIndex].text;
+            contentElement.textContent = "";
+            index = 0;
+            showText();
+            if (currentDialogueIndex < dialogue.length - 1) {
+                buttonElement.textContent = '다음';
+            } else {
+                buttonElement.textContent = '종료';
+            }
+        }
+
+        function showText() {
+            if(index < text.length) {
+                if (text[index] === '\n') {
+                    contentElement.innerHTML += '<br>';
+                } else {
+                    contentElement.innerHTML += text[index];
+                }
+                index++;
+                setTimeout(showText, 50);
+            }
+        }
+
+        function setText() {
+            index = text.length;
+            contentElement.innerHTML = text.replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+
+</html>
