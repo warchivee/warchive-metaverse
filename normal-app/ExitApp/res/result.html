@@ -86,7 +86,7 @@
         .scroll-content {
             height: fit-content;
             position: relative;
-            animation: scrollUp 20s linear forwards;
+            animation: scrollUp 25s linear forwards;
             color: white;
             font-size: 20px;
         }
@@ -105,7 +105,7 @@
                 top: 100%;
             }
             to {
-                top: -120%;
+                top: -190%;
             }
         }
 	</style>
@@ -257,14 +257,14 @@
             scrollContainer.className = 'scroll-container';
             const scrollContent = document.createElement('div');
             scrollContent.className = 'scroll-content';
-            scrollContent.innerHTML = "기획<br><br>팀 와카이브<br><br><br><br>개발<br><br>팀 와카이브<br><br><br><br>시나리오<br><br>팀 와카이브<br><br><br><br>캐릭터 디자인<br><br>팀 와카이브<br><br><br><br>음악<br><br>MusMus<br><br><br><br>플랫폼<br><br>zep<br><br><br><br><br><br><br><br><br><br>플레이 해주셔서 감사합니다.";
+            scrollContent.innerHTML = `기획<br><br>팀 와카이브<br><br><br><br>개발<br><br>팀 와카이브<br><br><br><br>시나리오<br><br>팀 와카이브<br><br><br><br>캐릭터 디자인<br><br>팀 와카이브<br><br><br><br>음악<br><br>MusMus<br><br><br><br>플랫폼<br><br>ZEP<br><br><br><br><br><br><br><br><br><br>플레이 해주셔서 감사합니다.<br><br><br><br><br><br><br><br><br><br><img src="logo_white.png" alt="캐롤린과 캐롤린">`;
 
             scrollContainer.appendChild(scrollContent);
             containerElement.appendChild(scrollContainer);
 
             setTimeout(() => {
                 closeWidget();
-            }, 20000); // 20 sec
+            }, 25000); // 25 sec
         }
     </script>
 </body>
