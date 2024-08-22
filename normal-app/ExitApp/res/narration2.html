@@ -125,8 +125,9 @@
         };
 
         function updateNarration() {    
-            if(dialogue[currentDialogueIndex].text === void 0) {
+            if(dialogue[currentDialogueIndex] === void 0) {
                 closeWidget();
+                return;
             }
 
             text = dialogue[currentDialogueIndex].text;
